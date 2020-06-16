@@ -39,12 +39,13 @@ namespace TransferData.BLL.Services
         /// Конвертер типов
         /// </summary>
         private readonly IAutoMapper _autoMapper;
-        public TransferExcelService(ILogger<TransferExcelService> logService, IExcelFileLoader excelLoader, IGenericRepository<ExcelModel1> excelRepository, IGenericRepository<ExcelModel2> excel2Repository)
+        public TransferExcelService(ILogger<TransferExcelService> logService, IExcelFileLoader excelLoader, IGenericRepository<ExcelModel1> excelRepository, IGenericRepository<ExcelModel2> excel2Repository, IAutoMapper autoMapper)
         {
             _logger = logService;
             _excelLoader = excelLoader;
             _excel1Repository = excelRepository;
             _excel2Repository = excel2Repository;
+            _autoMapper = autoMapper;
         }
         public async Task Save(IFormFile excelModelForm)
         {
@@ -59,12 +60,13 @@ namespace TransferData.BLL.Services
 
             foreach (var excelSheetDto in listExcelSheetDto)
             {
-                if (excelSheetDto.Id == 1)
+                if (excelSheetDto.Id == 0)
                 {
-                    IEnumerable<ExcelModel1> exelModels = excelSheetDto.ExcelListRowDto.Select(_autoMapper.Map<ExcelModel1>);
+                    var listExcel = excelSheetDto.ExcelListRowDto.ToList();
+                    List<ExcelModel1> exelModels = listExcel.Select(x=>_autoMapper.Map<ExcelModel1>(x)).ToList();
                     await _excel1Repository.SaveAsync(exelModels);
                 }
-                else if (excelSheetDto.Id == 2)
+                else if (excelSheetDto.Id == 1)
                 {
                     IEnumerable<ExcelModel2> exelModels = excelSheetDto.ExcelListRowDto.Select(_autoMapper.Map<ExcelModel2>);
                     await _excel2Repository.SaveAsync(exelModels);
@@ -96,7 +98,7 @@ namespace TransferData.BLL.Services
         /// </summary>
         /// <param name="fileName">Имя файла</param>
         /// <param name="excelModel">Модель файла.</param>
-        private IEnumerable<ExcelRowDto> GetExcelModelDto(ExcelSheetModel excelSheetModel,string fileName)
+        private List<ExcelRowDto> GetExcelModelDto(ExcelSheetModel excelSheetModel,string fileName)
         {
             var listExcelModelDto = new List<ExcelRowDto>();
 

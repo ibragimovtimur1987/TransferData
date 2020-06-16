@@ -15,6 +15,6 @@ namespace TransferData.BLL.DTO
         /// <summary>
         /// Список строк excel файла
         /// </summary>
-        public IEnumerable<ExcelRowDto> ExcelListRowDto { get; set; }
+        public List<ExcelRowDto> ExcelListRowDto { get; set; }
     }
 }
