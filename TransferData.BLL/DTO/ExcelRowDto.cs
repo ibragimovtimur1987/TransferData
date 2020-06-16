@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TransferData.BLL.Models
 {
-    public class ExcelModelDto
+    public class ExcelRowDto
     {
         public string col1 { get; set; }
         public string col2 { get; set; }

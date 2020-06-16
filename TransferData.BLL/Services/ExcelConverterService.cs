@@ -1,6 +1,11 @@
-﻿using System;
+﻿using Q101.ExcelLoader.Concrete.Models;
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Text;
+using TransferData.BLL.DTO;
+using TransferData.BLL.Models;
 
 namespace TransferData.BLL.Services
 {
@@ -19,12 +24,12 @@ namespace TransferData.BLL.Services
         }
 
         /// <inheritdoc />
-        public ExcelReportFileConverter Convert(string filePath, ExcelFileModel excelModel)
+        public ExcelFileContentDto Convert(string filePath, ExcelFileModel excelModel)
         {
-            var fileContent = new IdlSftpExcelReportFileContentDto
+            var fileContent = new ExcelFileContentDto
             {
                 FileName = Path.GetFileName(filePath),
-                OrderReports = GetOrderReports(filePath, excelModel)
+                ExcelListRowDto = GetExcelModelDto(filePath, excelModel)
             };
 
             return fileContent;
@@ -35,15 +40,15 @@ namespace TransferData.BLL.Services
         /// </summary>
         /// <param name="filePath">Путь к файлу.</param>
         /// <param name="excelModel">Модель файла.</param>
-        private IEnumerable<IdlSftpExcelReportFileOrderReportDto> GetOrderReports(string filePath, ExcelFileModel excelModel)
+        private IEnumerable<ExcelRowDto> GetExcelModelDto(string filePath, ExcelFileModel excelModel)
         {
-            var reports = new List<IdlSftpExcelReportFileOrderReportDto>();
+            var listExcelModelDto = new List<ExcelRowDto>();
 
             var rows = excelModel?.Sheets?.FirstOrDefault()?.Rows.ToList();
 
             if (rows == null || rows.Count == 1)
             {
-                return reports;
+                return listExcelModelDto;
             }
 
             for (int i = 1; i < rows.Count; i++)
@@ -52,32 +57,39 @@ namespace TransferData.BLL.Services
                 {
                     var cells = rows[i].Cells.ToList();
 
-                    var report = new IdlSftpExcelReportFileOrderReportDto
+                    ExcelRowDto excelModelDto = new ExcelRowDto
                     {
-                        OrderId = cells[1]?.GetInt() ?? 0,
-                        ImportDate = cells[2]?.GetDateTime(),
-                        PrintLabelDate = cells[3]?.GetDateTime(),
-                        PackagingStartDate = cells[4]?.GetDateTime(),
-                        CancelDate = cells[5]?.GetDateTime(),
-                        PackageDate = cells[6]?.GetDateTime(),
-                        ReadyToDispatchDate = cells[7]?.GetDateTime(),
-                        DispatchDate = cells[8]?.GetDateTime()
+                        col1 = cells[0]?.Value?.ToString() ?? "",
+                        col2 = cells[1]?.Value?.ToString() ?? "",
+                        col3 = cells[2]?.Value?.ToString() ?? "",
+                        col4 = cells[3]?.Value?.ToString() ?? "",
+                        col5 = cells[4]?.Value?.ToString() ?? "",
+                        col6 = cells[5]?.Value?.ToString() ?? "",
+                        col7 = cells[6]?.Value?.ToString() ?? "",
+                        col8 = cells[7]?.Value?.ToString() ?? "",
+                        col9 = cells[8]?.Value?.ToString() ?? "",
+                        col10 = cells[9]?.Value?.ToString() ?? "",
+                        col11 = cells[10]?.Value?.ToString() ?? "",
+                        col12 = cells[11]?.Value?.ToString() ?? "",
+                        col13 = cells[12]?.Value?.ToString() ?? "",
+                        col14 = cells[13]?.Value?.ToString() ?? "",
+                        col15 = cells[14]?.Value?.ToString() ?? "",
+                        col16 = cells[15]?.Value?.ToString() ?? "",
+                        col17 = cells[16]?.Value?.ToString() ?? "",
+                        col18 = cells[17]?.Value?.ToString() ?? "",
+                        col19 = cells[18]?.Value?.ToString() ?? "",
+                        col20 = cells[19]?.Value?.ToString() ?? "",
                     };
 
-                    if (report.OrderId == 0)
-                    {
-                        continue;
-                    }
-
-                    reports.Add(report);
+                    listExcelModelDto.Add(excelModelDto);
                 }
                 catch (Exception exc)
                 {
-                    _logger.LogError(exc, $"IDL SFTP Excel Order reports. File: {filePath} at line {i}");
+                    _logger.LogError(exc, $"Excel Order reports. File: {filePath} at line {i}");
                 }
             }
 
-            return reports;
+            return listExcelModelDto;
         }
     }
 }
