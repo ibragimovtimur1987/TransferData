@@ -43,7 +43,10 @@ namespace TransferData.Api.Controllers
             {
                 foreach (IFormFile file in files)
                 {
-                   await _excelConverterService.Save(file);
+                    string fileExtension =
+                                     System.IO.Path.GetExtension(file.FileName);
+                    if (fileExtension == ".xls" || fileExtension == ".xlsx") continue;
+                    await _excelConverterService.Save(file);
                 }
             }
         }
