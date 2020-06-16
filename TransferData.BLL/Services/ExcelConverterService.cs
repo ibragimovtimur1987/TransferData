@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
+using Q101.ExcelLoader.Abstract;
 using Q101.ExcelLoader.Concrete.Models;
 using System;
 using System.Collections.Generic;
@@ -15,25 +17,34 @@ namespace TransferData.BLL.Services
         /// Логирование.
         /// </summary>
         private readonly ILogger _logger;
-
+        /// <summary>
+        /// Загрузчик Excel файлов.
+        /// </summary>
+        private readonly IExcelFileLoader _excelLoader;
         /// <summary>
         /// Конвертер содержимого sftp файла excel report.
         /// </summary>
-        public ExcelConverterService(ILogger<ExcelConverterService> logService)
+        public ExcelConverterService(ILogger<ExcelConverterService> logService, IExcelFileLoader excelLoader)
         {
             _logger = logService;
+            _excelLoader = excelLoader;
         }
 
         /// <inheritdoc />
-        public ExcelFileContentDto Convert(string filePath, ExcelFileModel excelModel)
+        public ExcelFileContentDto Convert(IFormFile excelModelForm)
         {
-            var fileContent = new ExcelFileContentDto
+            using (var fs = excelModelForm.OpenReadStream())
             {
-                FileName = Path.GetFileName(filePath),
-                ExcelListRowDto = GetExcelModelDto(filePath, excelModel)
-            };
+                var excelFile = _excelLoader.Load(fs);
 
-            return fileContent;
+                var fileContent = new ExcelFileContentDto
+                {
+                    FileName = excelModelForm.FileName,
+                    ExcelListRowDto = GetExcelModelDto(excelFile)
+                };
+
+                return fileContent;
+            }
         }
 
         /// <summary>
@@ -41,7 +52,7 @@ namespace TransferData.BLL.Services
         /// </summary>
         /// <param name="filePath">Путь к файлу.</param>
         /// <param name="excelModel">Модель файла.</param>
-        private IEnumerable<ExcelRowDto> GetExcelModelDto(string filePath, ExcelFileModel excelModel)
+        private IEnumerable<ExcelRowDto> GetExcelModelDto(ExcelFileModel excelModel)
         {
             var listExcelModelDto = new List<ExcelRowDto>();
 
