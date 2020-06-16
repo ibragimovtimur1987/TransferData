@@ -39,17 +39,12 @@ namespace TransferData.BLL.Services
         /// Конвертер типов
         /// </summary>
         private readonly IAutoMapper _autoMapper;
-        /// <summary>
-        /// Конвертер типов
-        /// </summary>
-        private readonly IExcelProvider _excelProvider;
-        public ExcelConverterService(ILogger<ExcelConverterService> logService, IExcelFileLoader excelLoader, IExcel1Repository excelRepository, IExcel2Repository excel2Repository, IExcelProvider excelProvider)
+        public ExcelConverterService(ILogger<ExcelConverterService> logService, IExcelFileLoader excelLoader, IExcel1Repository excelRepository, IExcel2Repository excel2Repository)
         {
             _logger = logService;
             _excelLoader = excelLoader;
             _excel1Repository = excelRepository;
             _excel2Repository = excel2Repository;
-            _excelProvider = excelProvider;
         }
         public async Task Save(IFormFile excelModelForm)
         {
