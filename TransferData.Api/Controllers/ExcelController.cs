@@ -18,7 +18,7 @@ namespace TransferData.Api.Controllers
         /// <summary>
         /// Репозиторий маркетинговых акций
         /// </summary>
-        private readonly IExcelConverterService _excelConverterService;
+        private readonly ITransferExcelService _excelConverterService;
 
         // GET: api/<ExcelController>
         [HttpGet]

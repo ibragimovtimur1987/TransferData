@@ -18,7 +18,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TransferData.BLL.Services
 {
-    public class ExcelConverterService: IExcelConverterService
+    public class TransferExcelService: ITransferExcelService
     {
         /// Логирование.
         /// </summary>
@@ -39,7 +39,7 @@ namespace TransferData.BLL.Services
         /// Конвертер типов
         /// </summary>
         private readonly IAutoMapper _autoMapper;
-        public ExcelConverterService(ILogger<ExcelConverterService> logService, IExcelFileLoader excelLoader, IGenericRepository<ExcelModel1> excelRepository, IGenericRepository<ExcelModel2> excel2Repository)
+        public TransferExcelService(ILogger<TransferExcelService> logService, IExcelFileLoader excelLoader, IGenericRepository<ExcelModel1> excelRepository, IGenericRepository<ExcelModel2> excel2Repository)
         {
             _logger = logService;
             _excelLoader = excelLoader;
@@ -48,8 +48,16 @@ namespace TransferData.BLL.Services
         }
         public async Task Save(IFormFile excelModelForm)
         {
-            List<ExcelSheetDto> listExcelSheetDto = Convert(excelModelForm);
-            foreach(var excelSheetDto in listExcelSheetDto)
+            using (var fs = excelModelForm.OpenReadStream())
+            {
+               await Save(fs, excelModelForm.FileName);
+            }
+        }
+        public async Task Save(Stream fs, string fileName)
+        {
+            List<ExcelSheetDto> listExcelSheetDto = Convert(fs, fileName);
+
+            foreach (var excelSheetDto in listExcelSheetDto)
             {
                 if (excelSheetDto.Id == 1)
                 {
@@ -60,14 +68,13 @@ namespace TransferData.BLL.Services
                 {
                     IEnumerable<ExcelModel2> exelModels = excelSheetDto.ExcelListRowDto.Select(_autoMapper.Map<ExcelModel2>);
                     await _excel2Repository.SaveAsync(exelModels);
-                }             
+                }
             }
         }
             /// <inheritdoc />
-        private List<ExcelSheetDto> Convert(IFormFile excelModelForm)
+            private List<ExcelSheetDto> Convert(Stream fs, string fileName)
         {
-            using (var fs = excelModelForm.OpenReadStream())
-            {
+          
                 var excelFile = _excelLoader.Load(fs);
                 int i = 0;
                 var listExcelSheetDto = new List<ExcelSheetDto>();
@@ -76,13 +83,13 @@ namespace TransferData.BLL.Services
                     var excelFileContentDto = new ExcelSheetDto
                     {
                         Id = i,
-                        ExcelListRowDto = GetExcelModelDto(sheet, excelModelForm.FileName)
+                        ExcelListRowDto = GetExcelModelDto(sheet, fileName)
                     };
                     listExcelSheetDto.Add(excelFileContentDto);
                     i++;
                 }
                 return listExcelSheetDto;
-            }
+            
         }
         /// <summary>
         /// Получить список excel dto по sheet.

@@ -7,8 +7,10 @@ using TransferData.BLL.DTO;
 
 namespace TransferData.BLL.Services.Interface
 {
-    public interface IExcelConverterService
+    public interface ITransferExcelService
     {
        Task Save(IFormFile excelModelForm);
+
+       Task Save(System.IO.Stream fs, string fileName);
     }
 }
