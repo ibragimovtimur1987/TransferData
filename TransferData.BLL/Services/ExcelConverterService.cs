@@ -1,4 +1,5 @@
-﻿using Q101.ExcelLoader.Concrete.Models;
+﻿using Microsoft.Extensions.Logging;
+using Q101.ExcelLoader.Concrete.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,7 +19,7 @@ namespace TransferData.BLL.Services
         /// <summary>
         /// Конвертер содержимого sftp файла excel report.
         /// </summary>
-        public ExcelReportFileConverter(ILogger<IdlSftpExcelReportFileConverter> logService)
+        public ExcelConverterService(ILogger<ExcelConverterService> logService)
         {
             _logger = logService;
         }

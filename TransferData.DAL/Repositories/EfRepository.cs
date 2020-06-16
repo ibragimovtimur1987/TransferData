@@ -10,68 +10,172 @@ using TransferData.DAL.EF;
 
 namespace TransferData.DAL.Repositories
 {
-    public class EfRepository<T> : IAsyncRepository<T> where T : BaseEntity, IDisposable
+    public abstract class GenericRepository<T> : IGenericRepository<T> where T : class
     {
+        protected TransferDataContext _context;
 
-        #region Fields
-
-        protected TransferDataContext Context;
-
-        #endregion
-
-        public EfRepository(TransferDataContext context)
+        public GenericRepository(TransferDataContext context)
         {
-            Context = context;
+            _context = context;
         }
 
-        #region Public Methods
-
-        public T GetById(int id)
+        public IQueryable<T> GetAll()
         {
-            return Context.Set<T>().Find(id);
+            return _context.Set<T>();
         }
 
-        public Task<T> FirstOrDefault(Expression<Func<T, bool>> predicate)
-            => Context.Set<T>().FirstOrDefaultAsync(predicate);
-
-        public async Task Add(T entity)
+        public virtual async Task<ICollection<T>> GetAllAsyn()
         {
-            // await Context.AddAsync(entity);
-            await Context.Set<T>().AddAsync(entity);
-            await Context.SaveChangesAsync();
+
+            return await _context.Set<T>().ToListAsync();
         }
 
-        public Task Update(T entity)
+        public virtual T Get(int id)
         {
-            // In case AsNoTracking is used
-            Context.Entry(entity).State = EntityState.Modified;
-            return Context.SaveChangesAsync();
+            return _context.Set<T>().Find(id);
         }
 
-        public Task Remove(T entity)
+        public virtual async Task<T> GetAsync(int id)
         {
-            Context.Set<T>().Remove(entity);
-            return Context.SaveChangesAsync();
+            return await _context.Set<T>().FindAsync(id);
         }
 
-        public async Task<IEnumerable<T>> GetAll()
+        public virtual T Add(T t)
         {
-            return await Context.Set<T>().ToListAsync();
+
+            _context.Set<T>().Add(t);
+            _context.SaveChanges();
+            return t;
         }
 
-        public async Task<IEnumerable<T>> GetWhere(Expression<Func<T, bool>> predicate)
+        public virtual async Task<T> AddAsyn(T t)
         {
-            return await Context.Set<T>().Where(predicate).ToListAsync();
+            _context.Set<T>().Add(t);
+            await _context.SaveChangesAsync();
+            return t;
+
         }
 
-        public Task<int> CountAll() => Context.Set<T>().CountAsync();
+        public virtual T Find(Expression<Func<T, bool>> match)
+        {
+            return _context.Set<T>().SingleOrDefault(match);
+        }
 
-        public Task<int> CountWhere(Expression<Func<T, bool>> predicate)
-            => Context.Set<T>().CountAsync(predicate);
+        public virtual async Task<T> FindAsync(Expression<Func<T, bool>> match)
+        {
+            return await _context.Set<T>().SingleOrDefaultAsync(match);
+        }
 
-        #endregion
+        public ICollection<T> FindAll(Expression<Func<T, bool>> match)
+        {
+            return _context.Set<T>().Where(match).ToList();
+        }
 
+        public async Task<ICollection<T>> FindAllAsync(Expression<Func<T, bool>> match)
+        {
+            return await _context.Set<T>().Where(match).ToListAsync();
+        }
 
+        public virtual void Delete(T entity)
+        {
+            _context.Set<T>().Remove(entity);
+            _context.SaveChanges();
+        }
 
+        public virtual async Task<int> DeleteAsyn(T entity)
+        {
+            _context.Set<T>().Remove(entity);
+            return await _context.SaveChangesAsync();
+        }
+
+        public virtual T Update(T t, object key)
+        {
+            if (t == null)
+                return null;
+            T exist = _context.Set<T>().Find(key);
+            if (exist != null)
+            {
+                _context.Entry(exist).CurrentValues.SetValues(t);
+                _context.SaveChanges();
+            }
+            return exist;
+        }
+
+        public virtual async Task<T> UpdateAsyn(T t, object key)
+        {
+            if (t == null)
+                return null;
+            T exist = await _context.Set<T>().FindAsync(key);
+            if (exist != null)
+            {
+                _context.Entry(exist).CurrentValues.SetValues(t);
+                await _context.SaveChangesAsync();
+            }
+            return exist;
+        }
+
+        public int Count()
+        {
+            return _context.Set<T>().Count();
+        }
+
+        public async Task<int> CountAsync()
+        {
+            return await _context.Set<T>().CountAsync();
+        }
+
+        public virtual void Save()
+        {
+
+            _context.SaveChanges();
+        }
+
+        public async virtual Task<int> SaveAsync()
+        {
+            return await _context.SaveChangesAsync();
+        }
+
+        public virtual IQueryable<T> FindBy(Expression<Func<T, bool>> predicate)
+        {
+            IQueryable<T> query = _context.Set<T>().Where(predicate);
+            return query;
+        }
+
+        public virtual async Task<ICollection<T>> FindByAsyn(Expression<Func<T, bool>> predicate)
+        {
+            return await _context.Set<T>().Where(predicate).ToListAsync();
+        }
+
+        public IQueryable<T> GetAllIncluding(params Expression<Func<T, object>>[] includeProperties)
+        {
+
+            IQueryable<T> queryable = GetAll();
+            foreach (Expression<Func<T, object>> includeProperty in includeProperties)
+            {
+
+                queryable = queryable.Include<T, object>(includeProperty);
+            }
+
+            return queryable;
+        }
+
+        private bool disposed = false;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    _context.Dispose();
+                }
+                this.disposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
     }
 }
