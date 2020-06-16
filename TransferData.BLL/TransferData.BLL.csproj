@@ -10,4 +10,8 @@
     <PackageReference Include="Q101.ExcelLoader" Version="1.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\TransferData.DAL\TransferData.DAL.csproj" />
+  </ItemGroup>
+
 </Project>

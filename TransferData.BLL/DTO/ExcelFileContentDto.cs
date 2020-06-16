@@ -10,7 +10,7 @@ namespace TransferData.BLL.DTO
         /// <summary>
         /// Имя файла.
         /// </summary>
-        public string FileName { get; set; }
+        public int Id { get; set; }
 
         /// <summary>
         /// Список отчётов для сверки заказа.

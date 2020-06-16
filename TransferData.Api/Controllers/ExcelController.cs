@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using TransferData.BLL.Services.Interface;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -14,6 +15,16 @@ namespace TransferData.Api.Controllers
     [ApiController]
     public class ExcelController : ControllerBase
     {
+        /// <summary>
+        /// Служба логирования
+        /// </summary>
+        private readonly ILogService _logService;
+
+        /// <summary>
+        /// Репозиторий маркетинговых акций
+        /// </summary>
+        private readonly IExcelConverterService _excelConverterService;
+
         // GET: api/<ExcelController>
         [HttpGet]
         public IEnumerable<string> Get()
@@ -30,13 +41,14 @@ namespace TransferData.Api.Controllers
 
         // POST api/<ExcelController>
         [HttpPost]
-        public void Post()
+        public async Task Post()
         {
             IFormFileCollection files = Request.Form.Files;
             if (files.Count > 0)
             {
                 foreach (IFormFile file in files)
                 {
+                   await _excelConverterService.Save(file);
                 }
             }
         }

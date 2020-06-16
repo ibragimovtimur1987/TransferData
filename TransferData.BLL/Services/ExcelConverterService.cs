@@ -7,12 +7,17 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using TransferData.BLL.DTO;
 using TransferData.BLL.Models;
+using TransferData.BLL.Services.Interface;
+using TransferData.DAL.Infrastructure;
+using TransferData.DAL.Models;
+using TransferData.DAL.Repositories.Interfaces;
 
 namespace TransferData.BLL.Services
 {
-    public class ExcelConverterService
+    public class ExcelConverterService: IExcelConverterService
     {
         /// Логирование.
         /// </summary>
@@ -22,47 +27,65 @@ namespace TransferData.BLL.Services
         /// </summary>
         private readonly IExcelFileLoader _excelLoader;
         /// <summary>
-        /// Конвертер содержимого sftp файла excel report.
+        /// Excel Repository
         /// </summary>
-        public ExcelConverterService(ILogger<ExcelConverterService> logService, IExcelFileLoader excelLoader)
+        private readonly IExcelRepository _excelRepository;
+        /// <summary>
+        /// Конвертер типов
+        /// </summary>
+        private readonly IAutoMapper _autoMapper;
+        public ExcelConverterService(ILogger<ExcelConverterService> logService, IExcelFileLoader excelLoader, IExcelRepository excelRepository)
         {
             _logger = logService;
             _excelLoader = excelLoader;
+            _excelRepository = excelRepository;
         }
-
-        /// <inheritdoc />
-        public ExcelFileContentDto Convert(IFormFile excelModelForm)
+        public async Task Save(IFormFile excelModelForm)
+        {
+            List<ExcelFileContentDto> listExcelFileContentDto = Convert(excelModelForm);
+            foreach(var excelFileContentDto in listExcelFileContentDto)
+            {
+                IEnumerable<ExcelModel> exelModels = excelFileContentDto.ExcelListRowDto.Select(_autoMapper.Map<ExcelModel>);
+                   await _excelRepository.SaveAsync(exelModels);
+            }
+        }
+            /// <inheritdoc />
+        private List<ExcelFileContentDto> Convert(IFormFile excelModelForm)
         {
             using (var fs = excelModelForm.OpenReadStream())
             {
                 var excelFile = _excelLoader.Load(fs);
-
-                var fileContent = new ExcelFileContentDto
+                int i = 0;
+                var listExcelFileContentDto = new List<ExcelFileContentDto>();
+                foreach (var sheet in excelFile?.Sheets)
                 {
-                    FileName = excelModelForm.FileName,
-                    ExcelListRowDto = GetExcelModelDto(excelFile)
-                };
-
-                return fileContent;
+                    var excelFileContentDto = new ExcelFileContentDto
+                    {
+                        Id = i,
+                        ExcelListRowDto = GetExcelModelDto(sheet, excelModelForm.FileName)
+                    };
+                    listExcelFileContentDto.Add(excelFileContentDto);
+                    i++;
+                }
+                return listExcelFileContentDto;
             }
         }
-
         /// <summary>
-        /// Получить список отчётов по заказам.
+        /// Получить список excel dto по sheet.
         /// </summary>
-        /// <param name="filePath">Путь к файлу.</param>
+        /// <param name="fileName">Имя файла</param>
         /// <param name="excelModel">Модель файла.</param>
-        private IEnumerable<ExcelRowDto> GetExcelModelDto(ExcelFileModel excelModel)
+        private IEnumerable<ExcelRowDto> GetExcelModelDto(ExcelSheetModel excelSheetModel,string fileName)
         {
             var listExcelModelDto = new List<ExcelRowDto>();
 
-            var rows = excelModel?.Sheets?.FirstOrDefault()?.Rows.ToList();
+           // var rows = excelModel?.Sheets?.FirstOrDefault()?.Rows.ToList();
 
-            if (rows == null || rows.Count == 1)
+            if (excelSheetModel == null || excelSheetModel.Rows == null)
             {
                 return listExcelModelDto;
             }
-
+            var rows = excelSheetModel.Rows.ToList();
             for (int i = 1; i < rows.Count; i++)
             {
                 try
@@ -95,9 +118,9 @@ namespace TransferData.BLL.Services
 
                     listExcelModelDto.Add(excelModelDto);
                 }
-                catch (Exception exc)
+                catch (Exception ex)
                 {
-                    _logger.LogError(exc, $"Excel Order reports. File: {filePath} at line {i}");
+                    _logger.LogError(ex, $"Excel Order reports. File: {fileName} at line {i}");
                 }
             }
 
