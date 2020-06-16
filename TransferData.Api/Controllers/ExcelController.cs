@@ -16,11 +16,6 @@ namespace TransferData.Api.Controllers
     public class ExcelController : ControllerBase
     {
         /// <summary>
-        /// Служба логирования
-        /// </summary>
-        private readonly ILogService _logService;
-
-        /// <summary>
         /// Репозиторий маркетинговых акций
         /// </summary>
         private readonly IExcelConverterService _excelConverterService;

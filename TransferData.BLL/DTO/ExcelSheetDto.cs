@@ -5,15 +5,15 @@ using TransferData.BLL.Models;
 
 namespace TransferData.BLL.DTO
 {
-    public class ExcelFileContentDto
+    public class ExcelSheetDto
     {
         /// <summary>
-        /// Имя файла.
+        /// Id Sheet.
         /// </summary>
         public int Id { get; set; }
 
         /// <summary>
-        /// Список отчётов для сверки заказа.
+        /// Список строк excel файла
         /// </summary>
         public IEnumerable<ExcelRowDto> ExcelListRowDto { get; set; }
     }

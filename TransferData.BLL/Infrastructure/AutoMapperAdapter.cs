@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace TransferData.DAL.Infrastructure
+namespace TransferData.BLL.Infrastructure
 {
     /// <summary>
     /// Реализация маппинга на базе AutoMapping

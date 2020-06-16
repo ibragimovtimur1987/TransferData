@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using TransferData.BLL.DTO;
 using TransferData.BLL.Models;
 using TransferData.BLL.Services.Interface;
-using TransferData.DAL.Infrastructure;
+using TransferData.BLL.Infrastructure;
 using TransferData.DAL.Models;
 using TransferData.DAL.Repositories.Interfaces;
 
@@ -42,32 +42,32 @@ namespace TransferData.BLL.Services
         }
         public async Task Save(IFormFile excelModelForm)
         {
-            List<ExcelFileContentDto> listExcelFileContentDto = Convert(excelModelForm);
-            foreach(var excelFileContentDto in listExcelFileContentDto)
+            List<ExcelSheetDto> listExcelSheetDto = Convert(excelModelForm);
+            foreach(var excelSheetDto in listExcelSheetDto)
             {
-                IEnumerable<ExcelModel> exelModels = excelFileContentDto.ExcelListRowDto.Select(_autoMapper.Map<ExcelModel>);
+                IEnumerable<ExcelModel> exelModels = excelSheetDto.ExcelListRowDto.Select(_autoMapper.Map<ExcelModel>);
                    await _excelRepository.SaveAsync(exelModels);
             }
         }
             /// <inheritdoc />
-        private List<ExcelFileContentDto> Convert(IFormFile excelModelForm)
+        private List<ExcelSheetDto> Convert(IFormFile excelModelForm)
         {
             using (var fs = excelModelForm.OpenReadStream())
             {
                 var excelFile = _excelLoader.Load(fs);
                 int i = 0;
-                var listExcelFileContentDto = new List<ExcelFileContentDto>();
+                var listExcelSheetDto = new List<ExcelSheetDto>();
                 foreach (var sheet in excelFile?.Sheets)
                 {
-                    var excelFileContentDto = new ExcelFileContentDto
+                    var excelFileContentDto = new ExcelSheetDto
                     {
                         Id = i,
                         ExcelListRowDto = GetExcelModelDto(sheet, excelModelForm.FileName)
                     };
-                    listExcelFileContentDto.Add(excelFileContentDto);
+                    listExcelSheetDto.Add(excelFileContentDto);
                     i++;
                 }
-                return listExcelFileContentDto;
+                return listExcelSheetDto;
             }
         }
         /// <summary>
