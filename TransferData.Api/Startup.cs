@@ -41,8 +41,10 @@ namespace TransferData.Api
             {
                 options.UseSqlServer(connection);
             });
-            services.AddScoped<IGenericRepository<ExcelModel1>, GenericRepository<ExcelModel1>>();
-            services.AddScoped<IGenericRepository<ExcelModel2>, GenericRepository<ExcelModel2>>();
+            services.AddScoped<IGenericRepository<ExcelModel1>, Excel1Repository>();
+            services.AddScoped<IGenericRepository<ExcelModel2>, Excel2Repository>();
+            services.AddScoped <Q101.ExcelLoader.Abstract.IExcelFileLoader, Q101.ExcelLoader.Concrete.ExcelFileLoader>();
+            services.AddScoped<BLL.Services.Interface.ITransferExcelService, BLL.Services.TransferExcelService>();
         }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -22,11 +22,11 @@ namespace TransferData.Tests
         [Fact]
         public void Upload()
         {
-            using (System.IO.Stream file = System.IO.File.OpenRead("test.xslx"))
+            using (System.IO.Stream file = System.IO.File.OpenRead(@"D:\проекты\тестовые задания\TransferData\TransferData\TransferData.Tests\bin\Debug\netcoreapp3.1\test.xlsx"))
             {
 
                 BLL.Services.Interface.ITransferExcelService transferExcelService = _serviceProvider.GetService<BLL.Services.Interface.ITransferExcelService>();
-                transferExcelService.Save(file, "test");
+                transferExcelService.Save(file, "test").Wait();
              }
         }
     }
