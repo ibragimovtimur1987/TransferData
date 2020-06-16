@@ -39,7 +39,8 @@ namespace TransferData.Api
             {
                 options.UseSqlServer(connection);
             });
-            services.AddScoped<IExcelRepository, ExcelRepository>();
+            services.AddScoped<IExcel1Repository, Excel1Repository>();
+            services.AddScoped<IExcel2Repository, Excel2Repository>();
         }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

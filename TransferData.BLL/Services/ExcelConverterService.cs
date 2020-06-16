@@ -14,6 +14,7 @@ using TransferData.BLL.Services.Interface;
 using TransferData.BLL.Infrastructure;
 using TransferData.DAL.Models;
 using TransferData.DAL.Repositories.Interfaces;
+using System.ComponentModel.DataAnnotations;
 
 namespace TransferData.BLL.Services
 {
@@ -27,26 +28,45 @@ namespace TransferData.BLL.Services
         /// </summary>
         private readonly IExcelFileLoader _excelLoader;
         /// <summary>
-        /// Excel Repository
+        /// Excel Repository 1
         /// </summary>
-        private readonly IExcelRepository _excelRepository;
+        private readonly IExcel1Repository _excel1Repository;
+        /// <summary>
+        /// Excel Repository 2
+        /// </summary>
+        private readonly IExcel2Repository _excel2Repository;
         /// <summary>
         /// Конвертер типов
         /// </summary>
         private readonly IAutoMapper _autoMapper;
-        public ExcelConverterService(ILogger<ExcelConverterService> logService, IExcelFileLoader excelLoader, IExcelRepository excelRepository)
+        /// <summary>
+        /// Конвертер типов
+        /// </summary>
+        private readonly IExcelProvider _excelProvider;
+        public ExcelConverterService(ILogger<ExcelConverterService> logService, IExcelFileLoader excelLoader, IExcel1Repository excelRepository, IExcel2Repository excel2Repository, IExcelProvider excelProvider)
         {
             _logger = logService;
             _excelLoader = excelLoader;
-            _excelRepository = excelRepository;
+            _excel1Repository = excelRepository;
+            _excel2Repository = excel2Repository;
+            _excelProvider = excelProvider;
         }
         public async Task Save(IFormFile excelModelForm)
         {
             List<ExcelSheetDto> listExcelSheetDto = Convert(excelModelForm);
             foreach(var excelSheetDto in listExcelSheetDto)
             {
-                IEnumerable<ExcelModel> exelModels = excelSheetDto.ExcelListRowDto.Select(_autoMapper.Map<ExcelModel>);
-                   await _excelRepository.SaveAsync(exelModels);
+                if (excelSheetDto.Id == 1)
+                {
+                    IEnumerable<ExcelModel1> exelModels = excelSheetDto.ExcelListRowDto.Select(_autoMapper.Map<ExcelModel1>);
+                    await _excel1Repository.SaveAsync(exelModels);
+                }
+                else if (excelSheetDto.Id == 2)
+                {
+                    IEnumerable<ExcelModel2> exelModels = excelSheetDto.ExcelListRowDto.Select(_autoMapper.Map<ExcelModel2>);
+                    await _excel2Repository.SaveAsync(exelModels);
+                }
+              
             }
         }
             /// <inheritdoc />

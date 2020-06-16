@@ -8,16 +8,16 @@ using TransferData.DAL.Repositories.Interfaces;
 
 namespace TransferData.DAL.Repositories
 {
-    public class ExcelRepository : GenericRepository<ExcelModel>, IExcelRepository
+    public class Excel2Repository : GenericRepository<ExcelModel2>, IExcel2Repository
     {
-        public ExcelRepository(TransferDataContext context) : base(context)
+        public Excel2Repository(TransferDataContext context) : base(context)
         {
 
         }
 
-        public async Task SaveAsync(IEnumerable<ExcelModel> listExcelModel)
+        public async Task SaveAsync(IEnumerable<ExcelModel2> listExcelModel)
         {
-           foreach(ExcelModel excelModel in listExcelModel)
+           foreach(ExcelModel2 excelModel in listExcelModel)
            {
                await AddAsyn(excelModel);
            }

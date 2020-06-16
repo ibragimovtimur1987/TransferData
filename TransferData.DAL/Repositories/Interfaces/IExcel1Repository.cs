@@ -7,8 +7,8 @@ using TransferData.DAL.Models;
 
 namespace TransferData.DAL.Repositories.Interfaces
 {
-    public interface IExcelRepository : IGenericRepository<ExcelModel>
+    public interface IExcel1Repository : IGenericRepository<ExcelModel1>
     {
-       Task SaveAsync(IEnumerable<ExcelModel> listExcelModel);
+       Task SaveAsync(IEnumerable<ExcelModel1> listExcelModel);
     }
 }

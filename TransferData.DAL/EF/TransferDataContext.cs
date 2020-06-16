@@ -10,8 +10,8 @@ namespace TransferData.DAL.EF
             // Database.EnsureDeleted();
             Database.EnsureCreated();
         }
-        public DbSet<ExcelModel> ExcelModel1 { get; set; }
-        public DbSet<ExcelModel> ExcelModel2 { get; set; }
+        public DbSet<ExcelModel1> ExcelModel1 { get; set; }
+        public DbSet<ExcelModel2> ExcelModel2 { get; set; }
         public TransferDataContext(DbContextOptions<TransferDataContext> options)
             : base(options)
         {

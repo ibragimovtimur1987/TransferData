@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TransferData.DAL.Models
 {
-    public class ExcelModel: BaseEntity
+    public class ExcelCommonModel: BaseEntity
     {
         public string col1 { get; set; }
         public string col2 { get; set; }
