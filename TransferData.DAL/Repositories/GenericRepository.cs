@@ -158,7 +158,13 @@ namespace TransferData.DAL.Repositories
 
             return queryable;
         }
-
+        public async Task SaveAsync(IEnumerable<T> listModel)
+        {
+            foreach (T model in listModel)
+            {
+                await AddAsyn(model);
+            }
+        }
         private bool disposed = false;
         protected virtual void Dispose(bool disposing)
         {

@@ -14,6 +14,8 @@ using TransferData.DAL.EF;
 using TransferData.DAL.Repositories;
 using TransferData.DAL.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using TransferData.DAL.Models;
+
 namespace TransferData.Api
 {
     public class Startup
@@ -39,8 +41,8 @@ namespace TransferData.Api
             {
                 options.UseSqlServer(connection);
             });
-            services.AddScoped<IExcel1Repository, Excel1Repository>();
-            services.AddScoped<IExcel2Repository, Excel2Repository>();
+            services.AddScoped<IGenericRepository<ExcelModel1>, GenericRepository<ExcelModel1>>();
+            services.AddScoped<IGenericRepository<ExcelModel2>, GenericRepository<ExcelModel2>>();
         }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

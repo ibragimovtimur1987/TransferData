@@ -30,16 +30,16 @@ namespace TransferData.BLL.Services
         /// <summary>
         /// Excel Repository 1
         /// </summary>
-        private readonly IExcel1Repository _excel1Repository;
+        private readonly IGenericRepository<ExcelModel1> _excel1Repository;
         /// <summary>
         /// Excel Repository 2
         /// </summary>
-        private readonly IExcel2Repository _excel2Repository;
+        private readonly IGenericRepository<ExcelModel2> _excel2Repository;
         /// <summary>
         /// Конвертер типов
         /// </summary>
         private readonly IAutoMapper _autoMapper;
-        public ExcelConverterService(ILogger<ExcelConverterService> logService, IExcelFileLoader excelLoader, IExcel1Repository excelRepository, IExcel2Repository excel2Repository)
+        public ExcelConverterService(ILogger<ExcelConverterService> logService, IExcelFileLoader excelLoader, IGenericRepository<ExcelModel1> excelRepository, IGenericRepository<ExcelModel2> excel2Repository)
         {
             _logger = logService;
             _excelLoader = excelLoader;
@@ -60,8 +60,7 @@ namespace TransferData.BLL.Services
                 {
                     IEnumerable<ExcelModel2> exelModels = excelSheetDto.ExcelListRowDto.Select(_autoMapper.Map<ExcelModel2>);
                     await _excel2Repository.SaveAsync(exelModels);
-                }
-              
+                }             
             }
         }
             /// <inheritdoc />
