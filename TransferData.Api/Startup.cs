@@ -10,7 +10,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-
+using TransferData.DAL.EF;
+using TransferData.DAL.Repositories;
+using TransferData.DAL.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 namespace TransferData.Api
 {
     public class Startup
@@ -26,8 +29,18 @@ namespace TransferData.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-        }
 
+            string connection = Configuration.GetConnectionString("DefaultConnection");
+            if (connection == null)
+            {
+                connection = "Server=(localdb)\\mssqllocaldb;Database=TransferDataDb;Trusted_Connection=True;MultipleActiveResultSets=true";
+            }
+            services.AddDbContext<TransferDataContext>(options =>
+            {
+                options.UseSqlServer(connection);
+            });
+            services.AddScoped<IExcelRepository, ExcelRepository>();
+        }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
