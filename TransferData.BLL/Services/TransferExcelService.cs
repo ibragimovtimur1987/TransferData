@@ -15,6 +15,7 @@ using TransferData.BLL.Infrastructure;
 using TransferData.DAL.Models;
 using TransferData.DAL.Repositories.Interfaces;
 using System.ComponentModel.DataAnnotations;
+using AutoMapper;
 
 namespace TransferData.BLL.Services
 {
@@ -38,14 +39,14 @@ namespace TransferData.BLL.Services
         /// <summary>
         /// Конвертер типов
         /// </summary>
-        private readonly IAutoMapper _autoMapper;
-        public TransferExcelService(ILogger<TransferExcelService> logService, IExcelFileLoader excelLoader, IGenericRepository<ExcelModel1> excelRepository, IGenericRepository<ExcelModel2> excel2Repository, IAutoMapper autoMapper)
+      //  private readonly IAutoMapper _autoMapper;
+        public TransferExcelService(ILogger<TransferExcelService> logService, IExcelFileLoader excelLoader, IGenericRepository<ExcelModel1> excelRepository, IGenericRepository<ExcelModel2> excel2Repository)
         {
             _logger = logService;
             _excelLoader = excelLoader;
             _excel1Repository = excelRepository;
             _excel2Repository = excel2Repository;
-            _autoMapper = autoMapper;
+         //   _autoMapper = autoMapper;
         }
         public async Task Save(IFormFile excelModelForm)
         {
@@ -56,19 +57,31 @@ namespace TransferData.BLL.Services
         }
         public async Task Save(Stream fs, string fileName)
         {
+          
             List<ExcelSheetDto> listExcelSheetDto = Convert(fs, fileName);
 
-            foreach (var excelSheetDto in listExcelSheetDto)
+            foreach (ExcelSheetDto excelSheetDto in listExcelSheetDto)
             {
                 if (excelSheetDto.Id == 0)
                 {
+                    var config = new MapperConfiguration(cfg => cfg.CreateMap<ExcelRowDto, ExcelModel1>());
+                    var _autoMapper = new Mapper(config);
+
                     var listExcel = excelSheetDto.ExcelListRowDto.ToList();
-                    List<ExcelModel1> exelModels = listExcel.Select(x=>_autoMapper.Map<ExcelModel1>(x)).ToList();
+                    List<ExcelModel1> exelModels = _autoMapper.Map<List<ExcelModel1>>(listExcel);
+
+                //    List<ExcelModel1> exelModels = listExcel.Select(x=>_autoMapper.Map<ExcelModel1>(x)).ToList();
                     await _excel1Repository.SaveAsync(exelModels);
                 }
                 else if (excelSheetDto.Id == 1)
                 {
-                    IEnumerable<ExcelModel2> exelModels = excelSheetDto.ExcelListRowDto.Select(_autoMapper.Map<ExcelModel2>);
+                    var config = new MapperConfiguration(cfg => cfg.CreateMap<ExcelRowDto, ExcelModel2>());
+                    var _autoMapper = new Mapper(config);
+
+                    var listExcel = excelSheetDto.ExcelListRowDto.ToList();
+                    List<ExcelModel2> exelModels = _autoMapper.Map<List<ExcelModel2>>(listExcel);
+
+                    //IEnumerable<ExcelModel2> exelModels = excelSheetDto.ExcelListRowDto.Select(_autoMapper.Map<ExcelModel2>);
                     await _excel2Repository.SaveAsync(exelModels);
                 }
             }

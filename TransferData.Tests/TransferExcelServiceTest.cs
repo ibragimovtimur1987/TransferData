@@ -2,7 +2,8 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 
 using System.Collections.Generic;
-
+using System.Threading.Tasks;
+using TransferData.BLL.Services.Interface;
 using Xunit;
 
 namespace TransferData.Tests
@@ -20,13 +21,13 @@ namespace TransferData.Tests
             _serviceProvider = new Utils.DependencyResolverHelpercs(webHost);
         }
         [Fact]
-        public void Upload()
+        public async Task Upload()
         {
             using (System.IO.Stream file = System.IO.File.OpenRead(@"D:\проекты\тестовые задания\TransferData\TransferData\TransferData.Tests\bin\Debug\netcoreapp3.1\test.xlsx"))
             {
 
-                BLL.Services.Interface.ITransferExcelService transferExcelService = _serviceProvider.GetService<BLL.Services.Interface.ITransferExcelService>();
-                transferExcelService.Save(file, "test").Wait();
+                ITransferExcelService transferExcelService = _serviceProvider.GetService<ITransferExcelService>();
+                await transferExcelService.Save(file, "test");
              }
         }
     }

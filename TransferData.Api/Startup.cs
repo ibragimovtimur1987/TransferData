@@ -45,7 +45,7 @@ namespace TransferData.Api
             services.AddScoped<IGenericRepository<ExcelModel2>, Excel2Repository>();
             services.AddScoped <Q101.ExcelLoader.Abstract.IExcelFileLoader, Q101.ExcelLoader.Concrete.ExcelFileLoader>();
             services.AddScoped<BLL.Services.Interface.ITransferExcelService, BLL.Services.TransferExcelService>();
-            services.AddScoped<BLL.Infrastructure.IAutoMapper, BLL.Infrastructure.AutoMapperAdapter>();
+           // services.AddScoped<BLL.Infrastructure.IAutoMapper, BLL.Infrastructure.AutoMapperAdapter>();
         }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
