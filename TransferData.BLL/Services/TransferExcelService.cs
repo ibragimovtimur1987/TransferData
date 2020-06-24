@@ -115,13 +115,10 @@ namespace TransferData.BLL.Services
         public async Task DeleteAsync(Guid Id)
         {
                 ExcelModel1 excelModel1 = await _excel1Repository.FindAsync(x => x.Id == Id);
-               
-                // var exelModels = _autoMapper.Map<ICollection<ExcelRowDto>>(excelCommonModel);
-                await _excel1Repository.DeleteAsyn(excelModel1);
+               if(excelModel1!=null) await _excel1Repository.DeleteAsyn(excelModel1);
 
                 ExcelModel2 excelModel2 = await _excel2Repository.FindAsync(x => x.Id == Id);
-            // var exelModels = _autoMapper.Map<ICollection<ExcelRowDto>>(excelCommonModel);
-                await _excel2Repository.DeleteAsyn(excelModel2);   
+                if(excelModel2 != null) await _excel2Repository.DeleteAsyn(excelModel2);   
         }
         public async Task UpdateAsync(ExcelRowDto excelRowDto)
         {
