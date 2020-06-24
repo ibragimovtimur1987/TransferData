@@ -66,18 +66,12 @@ namespace TransferData.BLL.Services
                 if (excelSheetDto.SheetId == 1)
                 {
                     var listExcel = excelSheetDto.ExcelListRowDto.ToList();
-                   // List<ExcelModel1> exelModels = _autoMapper.Map<List<ExcelModel1>>(listExcel);
                     var exelModels = listExcel.Select(_autoMapper.Map<ExcelModel1>).ToList();
-
                     await _excel1Repository.SaveAsync(exelModels);
                 }
                 else if (excelSheetDto.SheetId == 2)
                 {
-                    //var config = new MapperConfiguration(cfg => cfg.CreateMap<ExcelRowDto, ExcelModel2>());
-                    //var _autoMapper = new Mapper(config);
-
                     var listExcel = excelSheetDto.ExcelListRowDto.ToList();
-                    //List<ExcelModel2> exelModels = _autoMapper.Map<List<ExcelModel2>>(listExcel);
                     var exelModels = listExcel.Select(_autoMapper.Map<ExcelModel2>);
                     await _excel2Repository.SaveAsync(exelModels);
                 }
@@ -92,7 +86,6 @@ namespace TransferData.BLL.Services
                 {
                     var excelCommonModel = await _excel1Repository.FindByAsyn(x => x.CreatedDate != null && x.CreatedDate.Date == createDateTime.Date);
                     var exelModels = excelCommonModel.Select(_autoMapper.Map<ExcelRowDto>);
-                    // var exelModels = _autoMapper.Map<ICollection<ExcelRowDto>>(excelCommonModel);
                     return exelModels;
                 }
                 else if (sheetId == 2)
@@ -127,15 +120,12 @@ namespace TransferData.BLL.Services
             {
                 if (excelRowDto.sheetId == 1)
                 {
-                    // var excelCommonModel = await _excel1Repository.FindByAsyn(x => x.CreatedDate != null && x.CreatedDate.Date == createDateTime.Date);
                     var excelModel1 = _autoMapper.Map<ExcelModel1>(excelRowDto);
-                    // var exelModels = _autoMapper.Map<ICollection<ExcelRowDto>>(excelCommonModel);
                     await _excel1Repository.UpdateAsyn(excelModel1, excelModel1.Id);
                 }
                 else if (excelRowDto.sheetId == 2)
                 {
                     var excelModel2 = _autoMapper.Map<ExcelModel2>(excelRowDto);
-                    // var exelModels = _autoMapper.Map<ICollection<ExcelRowDto>>(excelCommonModel);
                     await _excel2Repository.UpdateAsyn(excelModel2, excelModel2.Id);
                 }
             }
