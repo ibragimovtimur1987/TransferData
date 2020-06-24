@@ -56,20 +56,34 @@ namespace TransferData.Api.Controllers
                     await _excelConverterService.SaveAsync(file);
                 }
             }
+            else
+            {
+                throw new BadReadException("Files Not Found");
+            }
         }
 
         // PUT api/<ExcelController>/5
         [HttpPut("{id}")]
         public Task Put(int id, [FromBody] ExcelRowDto excelRowDto)
         {
+            if (excelRowDto==null)
+            {
+                new BadReadException("Body is empty");
+            }
             return _excelConverterService.UpdateAsync(excelRowDto);
         }
 
         // DELETE api/<ExcelController>/5
         [HttpDelete("{id}")]
-        public Task Delete(Guid id)
+        public Task Delete(string id)
         {
-            return _excelConverterService.DeleteAsync(id);
+           
+            if (id == null)
+            {
+                new BadReadException("id is null");
+            }
+            Guid guid = new Guid(id);
+            return _excelConverterService.DeleteAsync(guid);
         }
     }
 }
