@@ -2,7 +2,9 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using TransferData.BLL.Infrastructure;
 using TransferData.BLL.Services.Interface;
 using Xunit;
 
@@ -14,7 +16,8 @@ namespace TransferData.Tests
 
         public TransferExcelServiceTest()
         {
-
+            // Конфигурация конвертера типов
+            AutomapperConfig.Config();
             var webHost = WebHost.CreateDefaultBuilder()
                 .UseStartup<Api.Startup>()
                 .Build();
@@ -39,6 +42,9 @@ namespace TransferData.Tests
                 ITransferExcelService transferExcelService = _serviceProvider.GetService<ITransferExcelService>();
                 var listExcelRoeDto1 = await transferExcelService.GetAsync(DateTime.Now, 1);
                 var listExcelRoeDto2 = await transferExcelService.GetAsync(DateTime.Now, 2);
+
+
+                var result = listExcelRoeDto1.ToList();
             }
         }
     }

@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using TransferData.DAL.Models;
 
 namespace TransferData.BLL.Models
 {
-    public class ExcelRowDto
+    public class ExcelRowDto: BaseEntity
     {
         public string col1 { get; set; }
         public string col2 { get; set; }

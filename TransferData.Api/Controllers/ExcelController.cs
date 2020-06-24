@@ -31,7 +31,7 @@ namespace TransferData.Api.Controllers
 
         // GET api/<ExcelController>/5
         [HttpGet("{createDate}")]
-        public async Task<ICollection<ExcelRowDto>> Get(DateTime? createDate,int? sheetId)
+        public async Task<IEnumerable<ExcelRowDto>> Get(DateTime? createDate,int? sheetId)
         {
             if (createDate == null || sheetId == null)
             {

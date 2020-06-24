@@ -40,14 +40,14 @@ namespace TransferData.BLL.Services
         /// <summary>
         /// Конвертер типов
         /// </summary>
-      //  private readonly IAutoMapper _autoMapper;
-        public TransferExcelService(ILogger<TransferExcelService> logService, IExcelFileLoader excelLoader, IGenericRepository<ExcelModel1> excelRepository, IGenericRepository<ExcelModel2> excel2Repository)
+        private readonly IAutoMapper _autoMapper;
+        public TransferExcelService(ILogger<TransferExcelService> logService, IExcelFileLoader excelLoader, IGenericRepository<ExcelModel1> excelRepository, IGenericRepository<ExcelModel2> excel2Repository, IAutoMapper autoMapper)
         {
             _logger = logService;
             _excelLoader = excelLoader;
             _excel1Repository = excelRepository;
             _excel2Repository = excel2Repository;
-         //   _autoMapper = autoMapper;
+            _autoMapper = autoMapper;
         }
         public async Task Save(IFormFile excelModelForm)
         {
@@ -65,42 +65,42 @@ namespace TransferData.BLL.Services
             {
                 if (excelSheetDto.SheetId == 1)
                 {
-                    var config = new MapperConfiguration(cfg => cfg.CreateMap<ExcelRowDto, ExcelModel1>());
-                    var _autoMapper = new Mapper(config);
+                 
 
                     var listExcel = excelSheetDto.ExcelListRowDto.ToList();
-                    List<ExcelModel1> exelModels = _autoMapper.Map<List<ExcelModel1>>(listExcel);
+                   // List<ExcelModel1> exelModels = _autoMapper.Map<List<ExcelModel1>>(listExcel);
+                    var exelModels = listExcel.Select(_autoMapper.Map<ExcelModel1>).ToList();
 
                     await _excel1Repository.SaveAsync(exelModels);
                 }
                 else if (excelSheetDto.SheetId == 2)
                 {
-                    var config = new MapperConfiguration(cfg => cfg.CreateMap<ExcelRowDto, ExcelModel2>());
-                    var _autoMapper = new Mapper(config);
+                    //var config = new MapperConfiguration(cfg => cfg.CreateMap<ExcelRowDto, ExcelModel2>());
+                    //var _autoMapper = new Mapper(config);
 
                     var listExcel = excelSheetDto.ExcelListRowDto.ToList();
-                    List<ExcelModel2> exelModels = _autoMapper.Map<List<ExcelModel2>>(listExcel);
-
+                    //List<ExcelModel2> exelModels = _autoMapper.Map<List<ExcelModel2>>(listExcel);
+                    var exelModels = listExcel.Select(_autoMapper.Map<ExcelModel2>);
                     await _excel2Repository.SaveAsync(exelModels);
                 }
             }
         }
-        async Task<ICollection<ExcelRowDto>> ITransferExcelService.GetAsync(DateTime createDateTime, int sheetId)
+        async Task<IEnumerable<ExcelRowDto>> ITransferExcelService.GetAsync(DateTime createDateTime, int sheetId)
         {
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<ExcelCommonModel, ExcelRowDto>());
-            var _autoMapper = new Mapper(config);
+       
             if (createDateTime != null)
             {
                 if (sheetId == 1)
                 {
                     var excelCommonModel = await _excel1Repository.FindByAsyn(x => x.CreatedDate!=null && x.CreatedDate.Date == createDateTime.Date);
-                    var exelModels = _autoMapper.Map<ICollection<ExcelRowDto>>(excelCommonModel);
+                    var exelModels = excelCommonModel.Select(_autoMapper.Map<ExcelRowDto>);
+                   // var exelModels = _autoMapper.Map<ICollection<ExcelRowDto>>(excelCommonModel);
                     return  exelModels;
                 }
                 else if (sheetId == 2)
                 {
-                    var excelCommonModel = await _excel2Repository.FindByAsyn(x => x.CreatedDate == createDateTime);
-                    var exelModels = _autoMapper.Map<ICollection<ExcelRowDto>>(excelCommonModel);
+                    var excelCommonModel = await _excel2Repository.FindByAsyn(x => x.CreatedDate != null && x.CreatedDate.Date == createDateTime.Date);
+                    var exelModels = excelCommonModel.Select(_autoMapper.Map<ExcelRowDto>);
                     return  exelModels;
                 }
                 else
