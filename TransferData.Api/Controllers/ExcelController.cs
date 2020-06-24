@@ -60,8 +60,11 @@ namespace TransferData.Api.Controllers
 
         // PUT api/<ExcelController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public Task Put(int id, [FromBody] ExcelRowDto excelRowDto)
         {
+            excelRowDto.sheetId = id;
+            return _excelConverterService.UpdateAsync(excelRowDto);
+
         }
 
         // DELETE api/<ExcelController>/5

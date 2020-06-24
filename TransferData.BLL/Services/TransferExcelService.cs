@@ -83,23 +83,23 @@ namespace TransferData.BLL.Services
                 }
             }
         }
-        async Task<IEnumerable<ExcelRowDto>> ITransferExcelService.GetAsync(DateTime createDateTime, int sheetId)
+        public async Task<IEnumerable<ExcelRowDto>> GetAsync(DateTime createDateTime, int sheetId)
         {
-       
+
             if (createDateTime != null)
             {
                 if (sheetId == 1)
                 {
-                    var excelCommonModel = await _excel1Repository.FindByAsyn(x => x.CreatedDate!=null && x.CreatedDate.Date == createDateTime.Date);
+                    var excelCommonModel = await _excel1Repository.FindByAsyn(x => x.CreatedDate != null && x.CreatedDate.Date == createDateTime.Date);
                     var exelModels = excelCommonModel.Select(_autoMapper.Map<ExcelRowDto>);
-                   // var exelModels = _autoMapper.Map<ICollection<ExcelRowDto>>(excelCommonModel);
-                    return  exelModels;
+                    // var exelModels = _autoMapper.Map<ICollection<ExcelRowDto>>(excelCommonModel);
+                    return exelModels;
                 }
                 else if (sheetId == 2)
                 {
                     var excelCommonModel = await _excel2Repository.FindByAsyn(x => x.CreatedDate != null && x.CreatedDate.Date == createDateTime.Date);
                     var exelModels = excelCommonModel.Select(_autoMapper.Map<ExcelRowDto>);
-                    return  exelModels;
+                    return exelModels;
                 }
                 else
                 {
@@ -111,6 +111,26 @@ namespace TransferData.BLL.Services
                 return null;
             }
 
+        }
+        public async Task UpdateAsync(ExcelRowDto excelRowDto)
+        {
+            excelRowDto.ModifiedDate = DateTime.Now;
+            if (excelRowDto != null)
+            {
+                if (excelRowDto.sheetId == 1)
+                {
+                    // var excelCommonModel = await _excel1Repository.FindByAsyn(x => x.CreatedDate != null && x.CreatedDate.Date == createDateTime.Date);
+                    var excelModel1 = _autoMapper.Map<ExcelModel1>(excelRowDto);
+                    // var exelModels = _autoMapper.Map<ICollection<ExcelRowDto>>(excelCommonModel);
+                    await _excel1Repository.UpdateAsyn(excelModel1, excelModel1.Id);
+                }
+                else if (excelRowDto.sheetId == 2)
+                {
+                    var excelModel2 = _autoMapper.Map<ExcelModel2>(excelRowDto);
+                    // var exelModels = _autoMapper.Map<ICollection<ExcelRowDto>>(excelCommonModel);
+                    await _excel2Repository.UpdateAsyn(excelModel2, excelModel2.Id);
+                }
+            }
         }
         /// <inheritdoc />
         private List<ExcelSheetDto> Convert(Stream fs, string fileName)
