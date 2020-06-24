@@ -22,23 +22,23 @@ namespace TransferData.Api.Controllers
         /// </summary>
         private readonly ITransferExcelService _excelConverterService;
 
-        //// GET: api/<ExcelController>
+        // GET: api/<ExcelController>
         //[HttpGet]
         //public IEnumerable<string> Get()
         //{
         //    return new string[] { "value1", "value2" };
         //}
 
-        // GET api/<ExcelController>/5
+        //// GET api/<ExcelController>/5
         [HttpGet]
         public async Task<IEnumerable<ExcelRowDto>> Get(DateTime? createDate)
         {
             if (createDate == null)
             {
-                throw new BadReadException("CreateDate or SheetId Not Found");
+                throw new BadReadException("CreateDate Not Found");
             }
             return await _excelConverterService.GetAsync(createDate.Value);
-                        
+
         }
 
         // POST api/<ExcelController>

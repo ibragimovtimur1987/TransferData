@@ -60,14 +60,16 @@ namespace TransferData.Api
 
             app.UseRouting();
 
-            // Конфигурация конвертера типов
-            AutomapperConfig.Config();
+          
 
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllers();
             });
+            // Конфигурация конвертера типов
+            AutomapperConfig.Config();
         }
     }
 }

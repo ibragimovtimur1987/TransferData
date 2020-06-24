@@ -20,7 +20,7 @@
     "TransferData.Api": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "api/excel/",
+      "launchUrl": "excel",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
