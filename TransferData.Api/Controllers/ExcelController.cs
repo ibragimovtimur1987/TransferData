@@ -5,6 +5,8 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using OfficeOpenXml.Packaging.Ionic.Zip;
+using TransferData.BLL.Models;
 using TransferData.BLL.Services.Interface;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -28,10 +30,15 @@ namespace TransferData.Api.Controllers
         }
 
         // GET api/<ExcelController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet("{createDate}")]
+        public async Task<ICollection<ExcelRowDto>> Get(DateTime? createDate,int? sheetId)
         {
-            return "value";
+            if (createDate == null || sheetId == null)
+            {
+                throw new BadReadException("CreateDate or SheetId Not Found");
+            }
+            return await _excelConverterService.GetAsync(createDate.Value, sheetId.Value);
+                        
         }
 
         // POST api/<ExcelController>

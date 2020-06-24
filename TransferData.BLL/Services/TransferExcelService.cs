@@ -16,6 +16,7 @@ using TransferData.DAL.Models;
 using TransferData.DAL.Repositories.Interfaces;
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime;
 
 namespace TransferData.BLL.Services
 {
@@ -62,7 +63,7 @@ namespace TransferData.BLL.Services
 
             foreach (ExcelSheetDto excelSheetDto in listExcelSheetDto)
             {
-                if (excelSheetDto.Id == 0)
+                if (excelSheetDto.SheetId == 1)
                 {
                     var config = new MapperConfiguration(cfg => cfg.CreateMap<ExcelRowDto, ExcelModel1>());
                     var _autoMapper = new Mapper(config);
@@ -70,10 +71,9 @@ namespace TransferData.BLL.Services
                     var listExcel = excelSheetDto.ExcelListRowDto.ToList();
                     List<ExcelModel1> exelModels = _autoMapper.Map<List<ExcelModel1>>(listExcel);
 
-                //    List<ExcelModel1> exelModels = listExcel.Select(x=>_autoMapper.Map<ExcelModel1>(x)).ToList();
                     await _excel1Repository.SaveAsync(exelModels);
                 }
-                else if (excelSheetDto.Id == 1)
+                else if (excelSheetDto.SheetId == 2)
                 {
                     var config = new MapperConfiguration(cfg => cfg.CreateMap<ExcelRowDto, ExcelModel2>());
                     var _autoMapper = new Mapper(config);
@@ -81,23 +81,51 @@ namespace TransferData.BLL.Services
                     var listExcel = excelSheetDto.ExcelListRowDto.ToList();
                     List<ExcelModel2> exelModels = _autoMapper.Map<List<ExcelModel2>>(listExcel);
 
-                    //IEnumerable<ExcelModel2> exelModels = excelSheetDto.ExcelListRowDto.Select(_autoMapper.Map<ExcelModel2>);
                     await _excel2Repository.SaveAsync(exelModels);
                 }
             }
         }
-            /// <inheritdoc />
-            private List<ExcelSheetDto> Convert(Stream fs, string fileName)
+        async Task<ICollection<ExcelRowDto>> ITransferExcelService.GetAsync(DateTime createDateTime, int sheetId)
+        {
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<ExcelCommonModel, ExcelRowDto>());
+            var _autoMapper = new Mapper(config);
+            if (createDateTime != null)
+            {
+                if (sheetId == 1)
+                {
+                    var excelCommonModel = await _excel1Repository.FindByAsyn(x => x.CreatedDate!=null && x.CreatedDate.Date == createDateTime.Date);
+                    var exelModels = _autoMapper.Map<ICollection<ExcelRowDto>>(excelCommonModel);
+                    return  exelModels;
+                }
+                else if (sheetId == 2)
+                {
+                    var excelCommonModel = await _excel2Repository.FindByAsyn(x => x.CreatedDate == createDateTime);
+                    var exelModels = _autoMapper.Map<ICollection<ExcelRowDto>>(excelCommonModel);
+                    return  exelModels;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                return null;
+            }
+
+        }
+        /// <inheritdoc />
+        private List<ExcelSheetDto> Convert(Stream fs, string fileName)
         {
           
                 var excelFile = _excelLoader.Load(fs);
-                int i = 0;
+                int i = 1;
                 var listExcelSheetDto = new List<ExcelSheetDto>();
                 foreach (var sheet in excelFile?.Sheets)
                 {
                     var excelFileContentDto = new ExcelSheetDto
                     {
-                        Id = i,
+                        SheetId = i,
                         ExcelListRowDto = GetExcelModelDto(sheet, fileName)
                     };
                     listExcelSheetDto.Add(excelFileContentDto);
@@ -162,5 +190,6 @@ namespace TransferData.BLL.Services
 
             return listExcelModelDto;
         }
+
     }
 }

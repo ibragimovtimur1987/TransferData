@@ -10,7 +10,7 @@ namespace TransferData.BLL.DTO
         /// <summary>
         /// Id Sheet.
         /// </summary>
-        public int Id { get; set; }
+        public int SheetId { get; set; }
 
         /// <summary>
         /// Список строк excel файла

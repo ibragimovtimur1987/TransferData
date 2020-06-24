@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TransferData.BLL.Services.Interface;
@@ -28,7 +28,18 @@ namespace TransferData.Tests
 
                 ITransferExcelService transferExcelService = _serviceProvider.GetService<ITransferExcelService>();
                 await transferExcelService.Save(file, "test");
-             }
+            }
+        }
+        [Fact]
+        public async Task Get()
+        {
+            using (System.IO.Stream file = System.IO.File.OpenRead(@"D:\проекты\тестовые задания\TransferData\TransferData\TransferData.Tests\bin\Debug\netcoreapp3.1\test.xlsx"))
+            {
+
+                ITransferExcelService transferExcelService = _serviceProvider.GetService<ITransferExcelService>();
+                var listExcelRoeDto1 = await transferExcelService.GetAsync(DateTime.Now, 1);
+                var listExcelRoeDto2 = await transferExcelService.GetAsync(DateTime.Now, 2);
+            }
         }
     }
 }
