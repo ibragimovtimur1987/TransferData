@@ -5,7 +5,9 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Server.IIS.Core;
 using OfficeOpenXml.Packaging.Ionic.Zip;
+using TransferData.Api.Filters;
 using TransferData.BLL.Models;
 using TransferData.BLL.Services.Interface;
 
@@ -15,6 +17,7 @@ namespace TransferData.Api.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [CustomExceptionFilter]
     public class ExcelController : ControllerBase
     {
 
@@ -30,7 +33,6 @@ namespace TransferData.Api.Controllers
         {
             if (createDate == null)
             {
-                Logger.Info("CreateDate Not Found");
                 throw new BadReadException("CreateDate Not Found");
             }
             return await _transferExcelService.GetAsync(createDate.Value);
@@ -54,6 +56,7 @@ namespace TransferData.Api.Controllers
             }
             else
             {
+                Logger.Info("Files Not Found");
                 throw new BadReadException("Files Not Found");
             }
         }
@@ -64,7 +67,7 @@ namespace TransferData.Api.Controllers
         {
             if (excelRowDto==null)
             {
-                new BadReadException("Body is empty");
+                throw new BadReadException("Body is empty");
             }
             return _transferExcelService.UpdateAsync(excelRowDto);
         }
@@ -76,7 +79,7 @@ namespace TransferData.Api.Controllers
            
             if (id == null)
             {
-                new BadReadException("id is null");
+                throw new BadReadException("id is null");
             }
             Guid guid = new Guid(id);
             return _transferExcelService.DeleteAsync(guid);

@@ -3,3 +3,20 @@
 2020-06-24 18:16:22.1215 Info Adding target FileTarget(Name=allfile)
 2020-06-24 18:16:22.1215 Info Adding target FileTarget(Name=ownFile-web)
 2020-06-24 18:16:22.1512 Info Validating config: TargetNames=allfile, ownFile-web, ConfigItems=45, FilePath=D:\проекты\тестовые задания\TransferData\TransferData\TransferData.Api\bin\Debug\netcoreapp3.1\nlog.config
+2020-06-24 18:35:59.3557 Info Message Template Auto Format enabled
+2020-06-24 18:35:59.3557 Info Loading assembly: NLog.Web.AspNetCore
+2020-06-24 18:35:59.4152 Info Adding target FileTarget(Name=allfile)
+2020-06-24 18:35:59.4171 Info Adding target FileTarget(Name=ownFile-web)
+2020-06-24 18:35:59.4481 Info Validating config: TargetNames=allfile, ownFile-web, ConfigItems=45, FilePath=D:\проекты\тестовые задания\TransferData\TransferData\TransferData.Api\bin\Debug\netcoreapp3.1\nlog.config
+2020-06-24 18:37:05.2757 Info Message Template Auto Format enabled
+2020-06-24 18:37:05.2757 Info Loading assembly: NLog.Web.AspNetCore
+2020-06-24 18:37:05.3316 Info Adding target FileTarget(Name=allfile)
+2020-06-24 18:37:05.3316 Info Adding target FileTarget(Name=ownFile-web)
+2020-06-24 18:37:05.3632 Info Validating config: TargetNames=allfile, ownFile-web, ConfigItems=45, FilePath=D:\проекты\тестовые задания\TransferData\TransferData\TransferData.Api\bin\Debug\netcoreapp3.1\nlog.config
+2020-06-24 18:37:29.4367 Info Configuring from an XML element in D:\проекты\тестовые задания\TransferData\TransferData\TransferData.Api\bin\Debug\netcoreapp3.1\nlog.config...
+2020-06-24 18:37:29.4367 Info Message Template Auto Format enabled
+2020-06-24 18:37:29.4367 Info Loading assembly: NLog.Web.AspNetCore
+2020-06-24 18:37:29.4367 Info Adding target FileTarget(Name=allfile)
+2020-06-24 18:37:29.4481 Info Adding target FileTarget(Name=ownFile-web)
+2020-06-24 18:37:29.4481 Info Closing old configuration.
+2020-06-24 18:37:29.4819 Info Validating config: TargetNames=allfile, ownFile-web, ConfigItems=45, FilePath=D:\проекты\тестовые задания\TransferData\TransferData\TransferData.Api\bin\Debug\netcoreapp3.1\nlog.config
