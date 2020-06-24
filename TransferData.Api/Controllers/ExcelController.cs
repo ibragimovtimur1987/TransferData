@@ -17,14 +17,12 @@ namespace TransferData.Api.Controllers
     [ApiController]
     public class ExcelController : ControllerBase
     {
-        /// <summary>
-        /// Репозиторий маркетинговых акций
-        /// </summary>
-        private readonly ITransferExcelService _excelConverterService;
 
-        public  ExcelController(ITransferExcelService excelConverterService)
+        private readonly ITransferExcelService _transferExcelService;
+
+        public  ExcelController(ITransferExcelService _transferExcelService)
         {
-            _excelConverterService = excelConverterService;
+            _transferExcelService = transferExcelService;
         }
             //// GET api/<ExcelController>/5
             [HttpGet]
@@ -34,7 +32,7 @@ namespace TransferData.Api.Controllers
             {
                 throw new BadReadException("CreateDate Not Found");
             }
-            return await _excelConverterService.GetAsync(createDate.Value);
+            return await _transferExcelService.GetAsync(createDate.Value);
 
         }
 
@@ -50,7 +48,7 @@ namespace TransferData.Api.Controllers
                     string fileExtension =
                                      System.IO.Path.GetExtension(file.FileName);
                     if (fileExtension == ".xls" || fileExtension == ".xlsx") continue;
-                    await _excelConverterService.SaveAsync(file);
+                    await _transferExcelService.SaveAsync(file);
                 }
             }
             else
@@ -67,7 +65,7 @@ namespace TransferData.Api.Controllers
             {
                 new BadReadException("Body is empty");
             }
-            return _excelConverterService.UpdateAsync(excelRowDto);
+            return _transferExcelService.UpdateAsync(excelRowDto);
         }
 
         // DELETE api/<ExcelController>/5
@@ -80,7 +78,7 @@ namespace TransferData.Api.Controllers
                 new BadReadException("id is null");
             }
             Guid guid = new Guid(id);
-            return _excelConverterService.DeleteAsync(guid);
+            return _transferExcelService.DeleteAsync(guid);
         }
     }
 }
