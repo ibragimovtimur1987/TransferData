@@ -12,7 +12,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "excel",
+      "launchUrl": "excel?createDate=2020-06-24",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
