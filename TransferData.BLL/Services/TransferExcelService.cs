@@ -158,9 +158,6 @@ namespace TransferData.BLL.Services
         private List<ExcelRowDto> GetExcelModelDto(ExcelSheetModel excelSheetModel,string fileName)
         {
             var listExcelModelDto = new List<ExcelRowDto>();
-
-           // var rows = excelModel?.Sheets?.FirstOrDefault()?.Rows.ToList();
-
             if (excelSheetModel == null || excelSheetModel.Rows == null)
             {
                 return listExcelModelDto;
