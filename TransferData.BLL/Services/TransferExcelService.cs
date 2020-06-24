@@ -22,9 +22,6 @@ namespace TransferData.BLL.Services
 {
     public class TransferExcelService: ITransferExcelService
     {
-        /// Логирование.
-        /// </summary>
-        private readonly ILogger<TransferExcelService> _logger;
         /// <summary>
         /// Загрузчик Excel файлов.
         /// </summary>
@@ -40,17 +37,17 @@ namespace TransferData.BLL.Services
         /// <summary>
         /// Конвертер типов
         /// </summary>
-        /// 
-        
+        ///         
         private readonly IAutoMapper _autoMapper;
-        public TransferExcelService(IExcelFileLoader excelLoader, IGenericRepository<ExcelModel1> excelRepository, IGenericRepository<ExcelModel2> excel2Repository, IAutoMapper autoMapper, ILogger<TransferExcelService> logger)
+        /// Логирование.
+        /// </summary>
+        private NLog.Logger _logger = NLog.Web.NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
+        public TransferExcelService(IExcelFileLoader excelLoader, IGenericRepository<ExcelModel1> excelRepository, IGenericRepository<ExcelModel2> excel2Repository, IAutoMapper autoMapper)
         {
             _excelLoader = excelLoader;
             _excel1Repository = excelRepository;
             _excel2Repository = excel2Repository;
             _autoMapper = autoMapper;
-            _logger = logger;
-            _logger.LogDebug(1, "NLog injected into HomeController");
         }
         public async Task SaveAsync(IFormFile excelModelForm)
         {
@@ -63,20 +60,21 @@ namespace TransferData.BLL.Services
         {
           
             List<ExcelSheetDto> listExcelSheetDto = Convert(fs, fileName);
-
+           
             foreach (ExcelSheetDto excelSheetDto in listExcelSheetDto)
             {
                 if (excelSheetDto.SheetId == 1)
                 {
                     var listExcel = excelSheetDto.ExcelListRowDto.ToList();
-                    var exelModels = listExcel.Select(_autoMapper.Map<ExcelModel1>).ToList();
-                    await _excel1Repository.SaveAsync(exelModels);
+                    var exelModels = listExcel.Select(_autoMapper.Map<ExcelModel1>);
+                    if (exelModels.Count() > 0)await _excel1Repository.SaveAsync(exelModels);
+                   
                 }
                 else if (excelSheetDto.SheetId == 2)
                 {
                     var listExcel = excelSheetDto.ExcelListRowDto.ToList();
                     var exelModels = listExcel.Select(_autoMapper.Map<ExcelModel2>);
-                    await _excel2Repository.SaveAsync(exelModels);
+                    if (exelModels.Count() > 0) await _excel2Repository.SaveAsync(exelModels);
                 }
             }
         }
@@ -92,18 +90,29 @@ namespace TransferData.BLL.Services
         }
         public async Task DeleteAsync(Guid Id)
         {
-                ExcelModel1 excelModel1 = await _excel1Repository.FindAsync(x => x.Id == Id);
-                if(excelModel1!=null) await _excel1Repository.DeleteAsyn(excelModel1);
-
+            ExcelModel1 excelModel1 = await _excel1Repository.FindAsync(x => x.Id == Id);
+            if (excelModel1 != null)
+            {
+                await _excel1Repository.DeleteAsyn(excelModel1);
+            }
+            else
+            {
                 ExcelModel2 excelModel2 = await _excel2Repository.FindAsync(x => x.Id == Id);
-                if(excelModel2 != null) await _excel2Repository.DeleteAsyn(excelModel2);   
+                if (excelModel2 != null)
+                {
+                    await _excel2Repository.DeleteAsyn(excelModel2);
+                }
+                else
+                {
+                    throw new Exception("Id not found in Excel Tables");
+                }
+            }
         }
         public async Task UpdateAsync(ExcelRowDto excelRowDto)
         {
             excelRowDto.ModifiedDate = DateTime.Now;
             if (excelRowDto != null)
-            {
-                
+            {              
                 if (_excel1Repository.AnyAsync(x => x.Id == excelRowDto.Id).Result)
                 {
                     var excelModel1 = _autoMapper.Map<ExcelModel1>(excelRowDto);                 
@@ -115,26 +124,36 @@ namespace TransferData.BLL.Services
                     await _excel2Repository.UpdateAsyn(excelModel2, excelRowDto.Id);
                 }
             }
+            else
+            {
+                throw new Exception("excelRowDto is null");
+            }
         }
         /// <inheritdoc />
         private List<ExcelSheetDto> Convert(Stream fs, string fileName)
-        {
-          
-                var excelFile = _excelLoader.Load(fs);
-                int i = 1;
-                var listExcelSheetDto = new List<ExcelSheetDto>();
-                foreach (var sheet in excelFile?.Sheets)
+        {         
+            var excelFile = _excelLoader.Load(fs);
+            int i = 1;
+            var listExcelSheetDto = new List<ExcelSheetDto>();
+            if (excelFile == null)
+            {
+                throw new Exception("excelFile is null");
+            }
+            if (excelFile.Sheets.Count() == 0)
+            {
+                throw new Exception("not found excel sheet");
+            }
+            foreach (var sheet in excelFile.Sheets)
+            {
+                var excelFileContentDto = new ExcelSheetDto
                 {
-                    var excelFileContentDto = new ExcelSheetDto
-                    {
-                        SheetId = i,
-                        ExcelListRowDto = GetExcelModelDto(sheet, fileName)
-                    };
-                    listExcelSheetDto.Add(excelFileContentDto);
-                    i++;
-                }
-                return listExcelSheetDto;
-            
+                    SheetId = i,
+                    ExcelListRowDto = GetExcelModelDto(sheet, fileName)
+                };
+                listExcelSheetDto.Add(excelFileContentDto);
+                i++;
+            }
+            return listExcelSheetDto;         
         }
         /// <summary>
         /// Получить список excel dto по sheet.
@@ -183,7 +202,7 @@ namespace TransferData.BLL.Services
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, $"Excel Order reports. File: {fileName} at line {i}");
+                    _logger.Error(ex, $"Excel Order reports. File: {fileName} at line {i}");
                 }
             }
 
