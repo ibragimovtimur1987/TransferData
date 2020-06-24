@@ -69,8 +69,9 @@ namespace TransferData.Api.Controllers
 
         // DELETE api/<ExcelController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public Task Delete(int id)
         {
+            return _excelConverterService.DeleteAsync(id);
         }
     }
 }

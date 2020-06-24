@@ -47,16 +47,16 @@ namespace TransferData.Tests
         [Fact]
         public async Task Update()
         {
-             BLL.Models.ExcelRowDto test1 =  new BLL.Models.ExcelRowDto
-             {
-                 Id=5,
-                 col1 = "test1",
-                 col12 = "test44",
-                 sheetId=1
-             };
-            BLL.Models.ExcelRowDto test2 =  new BLL.Models.ExcelRowDto
+            BLL.Models.ExcelRowDto test1 = new BLL.Models.ExcelRowDto
             {
-                Id=2,
+                Id = 5,
+                col1 = "test1",
+                col12 = "test44",
+                sheetId = 1
+            };
+            BLL.Models.ExcelRowDto test2 = new BLL.Models.ExcelRowDto
+            {
+                Id = 2,
                 col1 = "test1222",
                 col12 = "test44222",
                 sheetId = 2
@@ -64,6 +64,14 @@ namespace TransferData.Tests
             ITransferExcelService transferExcelService = _serviceProvider.GetService<ITransferExcelService>();
             await transferExcelService.UpdateAsync(test1);
             await transferExcelService.UpdateAsync(test2);
+
+        }
+        [Fact]
+        public async Task Delete()
+        {
+            int i = 3;
+            ITransferExcelService transferExcelService = _serviceProvider.GetService<ITransferExcelService>();
+            await transferExcelService.DeleteAsync(i);
 
         }
     }

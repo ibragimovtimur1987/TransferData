@@ -18,5 +18,7 @@ namespace TransferData.BLL.Services.Interface
        Task<IEnumerable<ExcelRowDto>> GetAsync(DateTime createDateTime, int sheetId);
 
        Task UpdateAsync(ExcelRowDto excelRowDto);
+
+       Task DeleteAsync(int rowId);
     }
 }
