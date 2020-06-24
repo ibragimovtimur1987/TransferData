@@ -50,8 +50,14 @@ namespace TransferData.Api.Controllers
                 {
                     string fileExtension =
                                      System.IO.Path.GetExtension(file.FileName);
-                    if (fileExtension == ".xls" || fileExtension == ".xlsx") continue;
-                    await _transferExcelService.SaveAsync(file);
+                    if (fileExtension == ".xls" || fileExtension == ".xlsx")
+                    {
+                        await _transferExcelService.SaveAsync(file);
+                    }
+                    else
+                    {
+                        throw new BadReadException("FileExtension not .xls or .xlsx");
+                    }
                 }
             }
             else
