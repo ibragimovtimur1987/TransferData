@@ -15,7 +15,7 @@ namespace TransferData.BLL.Services.Interface
 
        Task SaveAsync(Stream fs, string fileName);
 
-       Task<IEnumerable<ExcelRowDto>> GetAsync(DateTime createDateTime, int sheetId);
+       Task<IEnumerable<ExcelRowDto>> GetAsync(DateTime createDateTime);
 
        Task UpdateAsync(ExcelRowDto excelRowDto);
 

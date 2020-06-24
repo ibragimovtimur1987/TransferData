@@ -65,7 +65,10 @@ namespace TransferData.DAL.Repositories
         {
             return await _context.Set<T>().SingleOrDefaultAsync(match);
         }
-
+        public virtual async Task<bool> AnyAsync(Expression<Func<T, bool>> match)
+        {
+            return await _context.Set<T>().AnyAsync(match);
+        }
         public ICollection<T> FindAll(Expression<Func<T, bool>> match)
         {
             return _context.Set<T>().Where(match).ToList();
@@ -105,13 +108,13 @@ namespace TransferData.DAL.Repositories
         {
             if (t == null)
                 return null;
-            T exist = await _context.Set<T>().FindAsync(key);
+            T exist = _context.Set<T>().Find(key);
             if (exist != null)
             {
                 _context.Entry(exist).CurrentValues.SetValues(t);
                 await _context.SaveChangesAsync();
             }
-            return exist;
+            return t;
         }
 
         public int Count()

@@ -33,5 +33,6 @@ namespace TransferData.DAL.Repositories.Interfaces
         T Update(T t, object key);
         Task<T> UpdateAsyn(T t, object key);
         Task SaveAsync(IEnumerable<T> listModel);
+        Task<bool> AnyAsync(Expression<Func<T, bool>> match);
     }
 }

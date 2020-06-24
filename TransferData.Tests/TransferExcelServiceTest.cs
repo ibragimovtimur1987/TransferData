@@ -38,8 +38,7 @@ namespace TransferData.Tests
         {        
 
                 ITransferExcelService transferExcelService = _serviceProvider.GetService<ITransferExcelService>();
-                var listExcelRoeDto1 = await transferExcelService.GetAsync(DateTime.Now, 1);
-                var listExcelRoeDto2 = await transferExcelService.GetAsync(DateTime.Now, 2);
+                var listExcelRoeDto1 = await transferExcelService.GetAsync(DateTime.Now);
 
 
                 var result = listExcelRoeDto1.ToList();         
@@ -47,23 +46,17 @@ namespace TransferData.Tests
         [Fact]
         public async Task Update()
         {
-            BLL.Models.ExcelRowDto test1 = new BLL.Models.ExcelRowDto
-            {
-               // Id = 5,
-                col1 = "test1",
-                col12 = "test44",
-                sheetId = 1
-            };
+
             BLL.Models.ExcelRowDto test2 = new BLL.Models.ExcelRowDto
             {
-              //  Id = 2,
+                Id = new Guid("b57184a2-bb6c-45a7-99d1-08d818220e53"),
                 col1 = "test1222",
                 col12 = "test44222",
-                sheetId = 2
+                //sheetId = 2
             };
             ITransferExcelService transferExcelService = _serviceProvider.GetService<ITransferExcelService>();
-            await transferExcelService.UpdateAsync(test1);
             await transferExcelService.UpdateAsync(test2);
+           // await transferExcelService.UpdateAsync(test2);
 
         }
         [Fact]

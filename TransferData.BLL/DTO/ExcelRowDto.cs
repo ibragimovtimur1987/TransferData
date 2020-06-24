@@ -28,6 +28,5 @@ namespace TransferData.BLL.Models
         public string col19 { get; set; }
         public string col20 { get; set; }
 
-        public int sheetId { get; set; }
     }
 }

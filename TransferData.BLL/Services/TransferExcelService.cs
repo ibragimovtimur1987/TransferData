@@ -77,33 +77,15 @@ namespace TransferData.BLL.Services
                 }
             }
         }
-        public async Task<IEnumerable<ExcelRowDto>> GetAsync(DateTime createDateTime, int sheetId)
+        public async Task<IEnumerable<ExcelRowDto>> GetAsync(DateTime createDateTime)
         {
+                var excelCommonModel1 = await _excel1Repository.FindByAsyn(x => x.CreatedDate != null && x.CreatedDate.Date == createDateTime.Date);
+                var exelModels1 = excelCommonModel1.Select(_autoMapper.Map<ExcelRowDto>);
 
-            if (createDateTime != null)
-            {
-                if (sheetId == 1)
-                {
-                    var excelCommonModel = await _excel1Repository.FindByAsyn(x => x.CreatedDate != null && x.CreatedDate.Date == createDateTime.Date);
-                    var exelModels = excelCommonModel.Select(_autoMapper.Map<ExcelRowDto>);
-                    return exelModels;
-                }
-                else if (sheetId == 2)
-                {
-                    var excelCommonModel = await _excel2Repository.FindByAsyn(x => x.CreatedDate != null && x.CreatedDate.Date == createDateTime.Date);
-                    var exelModels = excelCommonModel.Select(_autoMapper.Map<ExcelRowDto>);
-                    return exelModels;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            else
-            {
-                return null;
-            }
+               var excelCommonModel2 = await _excel2Repository.FindByAsyn(x => x.CreatedDate != null && x.CreatedDate.Date == createDateTime.Date);
+               var exelModels2 = excelCommonModel2.Select(_autoMapper.Map<ExcelRowDto>);
 
+               return exelModels1.Concat(exelModels2);
         }
         public async Task DeleteAsync(Guid Id)
         {
@@ -118,15 +100,16 @@ namespace TransferData.BLL.Services
             excelRowDto.ModifiedDate = DateTime.Now;
             if (excelRowDto != null)
             {
-                if (excelRowDto.sheetId == 1)
+                
+                if (_excel1Repository.AnyAsync(x => x.Id == excelRowDto.Id).Result)
                 {
-                    var excelModel1 = _autoMapper.Map<ExcelModel1>(excelRowDto);
-                    await _excel1Repository.UpdateAsyn(excelModel1, excelModel1.Id);
+                    var excelModel1 = _autoMapper.Map<ExcelModel1>(excelRowDto);                 
+                    await _excel1Repository.UpdateAsyn(excelModel1, excelRowDto.Id);
                 }
-                else if (excelRowDto.sheetId == 2)
+                else if (_excel2Repository.AnyAsync(x => x.Id == excelRowDto.Id).Result)
                 {
                     var excelModel2 = _autoMapper.Map<ExcelModel2>(excelRowDto);
-                    await _excel2Repository.UpdateAsyn(excelModel2, excelModel2.Id);
+                    await _excel2Repository.UpdateAsyn(excelModel2, excelRowDto.Id);
                 }
             }
         }

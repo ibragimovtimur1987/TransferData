@@ -31,13 +31,13 @@ namespace TransferData.Api.Controllers
 
         // GET api/<ExcelController>/5
         [HttpGet("{createDate}")]
-        public async Task<IEnumerable<ExcelRowDto>> Get(DateTime? createDate,int? sheetId)
+        public async Task<IEnumerable<ExcelRowDto>> Get(DateTime? createDate)
         {
-            if (createDate == null || sheetId == null)
+            if (createDate == null)
             {
                 throw new BadReadException("CreateDate or SheetId Not Found");
             }
-            return await _excelConverterService.GetAsync(createDate.Value, sheetId.Value);
+            return await _excelConverterService.GetAsync(createDate.Value);
                         
         }
 
@@ -62,9 +62,7 @@ namespace TransferData.Api.Controllers
         [HttpPut("{id}")]
         public Task Put(int id, [FromBody] ExcelRowDto excelRowDto)
         {
-            excelRowDto.sheetId = id;
             return _excelConverterService.UpdateAsync(excelRowDto);
-
         }
 
         // DELETE api/<ExcelController>/5
