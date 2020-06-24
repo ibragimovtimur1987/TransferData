@@ -36,12 +36,9 @@ namespace TransferData.Tests
         [Fact]
         public async Task Get()
         {        
-
-                ITransferExcelService transferExcelService = _serviceProvider.GetService<ITransferExcelService>();
-                var listExcelRoeDto1 = await transferExcelService.GetAsync(DateTime.Now);
-
-
-                var result = listExcelRoeDto1.ToList();         
+            ITransferExcelService transferExcelService = _serviceProvider.GetService<ITransferExcelService>();
+            var listExcelRoeDto1 = await transferExcelService.GetAsync(DateTime.Now);
+            var result = listExcelRoeDto1.ToList();         
         }
         [Fact]
         public async Task Update()
@@ -52,7 +49,6 @@ namespace TransferData.Tests
                 Id = new Guid("b57184a2-bb6c-45a7-99d1-08d818220e53"),
                 col1 = "test1222",
                 col12 = "test44222",
-                //sheetId = 2
             };
             ITransferExcelService transferExcelService = _serviceProvider.GetService<ITransferExcelService>();
             await transferExcelService.UpdateAsync(test2);
