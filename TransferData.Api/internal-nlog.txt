@@ -1,0 +1,5 @@
+2020-06-24 18:16:22.0633 Info Message Template Auto Format enabled
+2020-06-24 18:16:22.0724 Info Loading assembly: NLog.Web.AspNetCore
+2020-06-24 18:16:22.1215 Info Adding target FileTarget(Name=allfile)
+2020-06-24 18:16:22.1215 Info Adding target FileTarget(Name=ownFile-web)
+2020-06-24 18:16:22.1512 Info Validating config: TargetNames=allfile, ownFile-web, ConfigItems=45, FilePath=D:\проекты\тестовые задания\TransferData\TransferData\TransferData.Api\bin\Debug\netcoreapp3.1\nlog.config

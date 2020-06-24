@@ -19,8 +19,8 @@ namespace TransferData.Api.Controllers
     {
 
         private readonly ITransferExcelService _transferExcelService;
-
-        public  ExcelController(ITransferExcelService _transferExcelService)
+        public static NLog.Logger Logger = NLog.Web.NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
+        public  ExcelController(ITransferExcelService transferExcelService)
         {
             _transferExcelService = transferExcelService;
         }
@@ -30,6 +30,7 @@ namespace TransferData.Api.Controllers
         {
             if (createDate == null)
             {
+                Logger.Info("CreateDate Not Found");
                 throw new BadReadException("CreateDate Not Found");
             }
             return await _transferExcelService.GetAsync(createDate.Value);

@@ -70,6 +70,9 @@ namespace TransferData.Api
             });
             // Конфигурация конвертера типов
             AutomapperConfig.Config();
+
+   
         }
+ 
     }
 }
