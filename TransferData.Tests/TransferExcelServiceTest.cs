@@ -46,25 +46,25 @@ namespace TransferData.Tests
         [Fact]
         public async Task Update()
         {
-            var guid = new Guid("b57184a2-bb6c-45a7-99d1-08d818220e53");
+
             BLL.Models.ExcelRowDto test2 = new BLL.Models.ExcelRowDto
             {
-               
+                Id = new Guid("b57184a2-bb6c-45a7-99d1-08d818220e53"),
                 col1 = "test1222",
                 col12 = "test44222",
                 //sheetId = 2
             };
             ITransferExcelService transferExcelService = _serviceProvider.GetService<ITransferExcelService>();
-            await transferExcelService.UpdateAsync(guid,test2);
+            await transferExcelService.UpdateAsync(test2);
            // await transferExcelService.UpdateAsync(test2);
 
         }
         [Fact]
         public async Task Delete()
         {
-            Guid guid = new Guid("b57184a2-bb6c-45a7-99d1-08");
+            Guid i = new Guid("b57184a2-bb6c-45a7-99d1-08");
             ITransferExcelService transferExcelService = _serviceProvider.GetService<ITransferExcelService>();
-            await transferExcelService.DeleteAsync(guid);
+            await transferExcelService.DeleteAsync(i);
 
         }
     }

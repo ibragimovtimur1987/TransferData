@@ -28,11 +28,8 @@ namespace TransferData.Api.Controllers
         //{
         //    return new string[] { "value1", "value2" };
         //}
-        public ExcelController(ITransferExcelService excelConverterService)
-        {
-            _excelConverterService = excelConverterService;
-        }
-            // GET api/<ExcelController>/5
+
+        // GET api/<ExcelController>/5
         [HttpGet]
         public async Task<IEnumerable<ExcelRowDto>> Get(DateTime? createDate)
         {
@@ -67,13 +64,13 @@ namespace TransferData.Api.Controllers
 
         // PUT api/<ExcelController>/5
         [HttpPut("{id}")]
-        public Task Put(Guid id, [FromBody] ExcelRowDto excelRowDto)
+        public Task Put(int id, [FromBody] ExcelRowDto excelRowDto)
         {
             if (excelRowDto==null)
             {
                 new BadReadException("Body is empty");
             }
-            return _excelConverterService.UpdateAsync(id,excelRowDto);
+            return _excelConverterService.UpdateAsync(excelRowDto);
         }
 
         // DELETE api/<ExcelController>/5
