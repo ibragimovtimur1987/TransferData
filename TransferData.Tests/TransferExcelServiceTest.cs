@@ -28,7 +28,6 @@ namespace TransferData.Tests
         {
             using (System.IO.Stream file = System.IO.File.OpenRead(@"D:\проекты\тестовые задания\TransferData\TransferData\TransferData.Tests\bin\Debug\netcoreapp3.1\test.xlsx"))
             {
-
                 ITransferExcelService transferExcelService = _serviceProvider.GetService<ITransferExcelService>();
                 await transferExcelService.SaveAsync(file, "test");
             }
@@ -46,19 +45,17 @@ namespace TransferData.Tests
 
             BLL.Models.ExcelRowDto test2 = new BLL.Models.ExcelRowDto
             {
-                Id = new Guid("e516ae0b-3036-4351-303a-08d8184737d6"),
+                Id = new Guid("d65b3fee-f4ef-40c5-58b6-08d81849018a"),
                 col1 = "888",
                 col12 = "777",
             };
             ITransferExcelService transferExcelService = _serviceProvider.GetService<ITransferExcelService>();
             await transferExcelService.UpdateAsync(test2);
-           // await transferExcelService.UpdateAsync(test2);
-
         }
         [Fact]
         public async Task Delete()
         {
-            Guid i = new Guid("2e6b74e1-05e1-4007-2025-08d8184737b5");
+            Guid i = new Guid("f911da43-c07a-4306-76f5-08d8184901b5");
             ITransferExcelService transferExcelService = _serviceProvider.GetService<ITransferExcelService>();
             await transferExcelService.DeleteAsync(i);
 

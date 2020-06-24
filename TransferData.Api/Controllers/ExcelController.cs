@@ -28,7 +28,7 @@ namespace TransferData.Api.Controllers
             _transferExcelService = transferExcelService;
         }
             //// GET api/<ExcelController>/5
-            [HttpGet]
+        [HttpGet]
         public async Task<IEnumerable<ExcelRowDto>> Get(DateTime? createDate)
         {
             if (createDate == null)
