@@ -30,7 +30,7 @@ namespace TransferData.Tests
             {
 
                 ITransferExcelService transferExcelService = _serviceProvider.GetService<ITransferExcelService>();
-                await transferExcelService.Save(file, "test");
+                await transferExcelService.SaveAsync(file, "test");
             }
         }
         [Fact]

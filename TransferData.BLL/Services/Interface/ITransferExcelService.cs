@@ -11,9 +11,9 @@ namespace TransferData.BLL.Services.Interface
 {
     public interface ITransferExcelService
     {
-       Task Save(IFormFile excelModelForm);
+       Task SaveAsync(IFormFile excelModelForm);
 
-       Task Save(Stream fs, string fileName);
+       Task SaveAsync(Stream fs, string fileName);
 
        Task<IEnumerable<ExcelRowDto>> GetAsync(DateTime createDateTime, int sheetId);
     }

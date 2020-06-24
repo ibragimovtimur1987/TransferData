@@ -53,7 +53,7 @@ namespace TransferData.Api.Controllers
                     string fileExtension =
                                      System.IO.Path.GetExtension(file.FileName);
                     if (fileExtension == ".xls" || fileExtension == ".xlsx") continue;
-                    await _excelConverterService.Save(file);
+                    await _excelConverterService.SaveAsync(file);
                 }
             }
         }

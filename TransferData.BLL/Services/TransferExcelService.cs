@@ -49,14 +49,14 @@ namespace TransferData.BLL.Services
             _excel2Repository = excel2Repository;
             _autoMapper = autoMapper;
         }
-        public async Task Save(IFormFile excelModelForm)
+        public async Task SaveAsync(IFormFile excelModelForm)
         {
             using (var fs = excelModelForm.OpenReadStream())
             {
-               await Save(fs, excelModelForm.FileName);
+               await SaveAsync(fs, excelModelForm.FileName);
             }
         }
-        public async Task Save(Stream fs, string fileName)
+        public async Task SaveAsync(Stream fs, string fileName)
         {
           
             List<ExcelSheetDto> listExcelSheetDto = Convert(fs, fileName);
@@ -65,8 +65,6 @@ namespace TransferData.BLL.Services
             {
                 if (excelSheetDto.SheetId == 1)
                 {
-                 
-
                     var listExcel = excelSheetDto.ExcelListRowDto.ToList();
                    // List<ExcelModel1> exelModels = _autoMapper.Map<List<ExcelModel1>>(listExcel);
                     var exelModels = listExcel.Select(_autoMapper.Map<ExcelModel1>).ToList();
