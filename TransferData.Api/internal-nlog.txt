@@ -20,3 +20,13 @@
 2020-06-24 18:37:29.4481 Info Adding target FileTarget(Name=ownFile-web)
 2020-06-24 18:37:29.4481 Info Closing old configuration.
 2020-06-24 18:37:29.4819 Info Validating config: TargetNames=allfile, ownFile-web, ConfigItems=45, FilePath=D:\проекты\тестовые задания\TransferData\TransferData\TransferData.Api\bin\Debug\netcoreapp3.1\nlog.config
+2020-06-24 19:01:31.1976 Info Message Template Auto Format enabled
+2020-06-24 19:01:31.1976 Info Loading assembly: NLog.Web.AspNetCore
+2020-06-24 19:01:31.2560 Info Adding target FileTarget(Name=allfile)
+2020-06-24 19:01:31.2560 Info Adding target FileTarget(Name=ownFile-web)
+2020-06-24 19:01:31.2849 Info Validating config: TargetNames=allfile, ownFile-web, ConfigItems=45, FilePath=D:\проекты\тестовые задания\TransferData\TransferData\TransferData.Api\bin\Debug\netcoreapp3.1\nlog.config
+2020-06-24 19:08:54.5137 Info Message Template Auto Format enabled
+2020-06-24 19:08:54.5254 Info Loading assembly: NLog.Web.AspNetCore
+2020-06-24 19:08:54.5835 Info Adding target FileTarget(Name=allfile)
+2020-06-24 19:08:54.5835 Info Adding target FileTarget(Name=ownFile-web)
+2020-06-24 19:08:54.6344 Info Validating config: TargetNames=allfile, ownFile-web, ConfigItems=45, FilePath=D:\проекты\тестовые задания\TransferData\TransferData\TransferData.Api\bin\Debug\netcoreapp3.1\nlog.config

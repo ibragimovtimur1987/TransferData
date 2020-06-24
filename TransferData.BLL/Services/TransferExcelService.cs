@@ -57,8 +57,7 @@ namespace TransferData.BLL.Services
             }
         }
         public async Task SaveAsync(Stream fs, string fileName)
-        {
-          
+        {          
             List<ExcelSheetDto> listExcelSheetDto = Convert(fs, fileName);
            
             foreach (ExcelSheetDto excelSheetDto in listExcelSheetDto)
@@ -104,7 +103,7 @@ namespace TransferData.BLL.Services
                 }
                 else
                 {
-                    throw new Exception("Id not found in Excel Tables");
+                    throw new Exception($"Id {Id} not found in Excel Tables");
                 }
             }
         }
@@ -122,6 +121,10 @@ namespace TransferData.BLL.Services
                 {
                     var excelModel2 = _autoMapper.Map<ExcelModel2>(excelRowDto);
                     await _excel2Repository.UpdateAsyn(excelModel2, excelRowDto.Id);
+                }
+                else
+                {
+                    throw new Exception($"Id {excelRowDto.Id} not found");
                 }
             }
             else
