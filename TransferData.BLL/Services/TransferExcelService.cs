@@ -24,7 +24,7 @@ namespace TransferData.BLL.Services
     {
         /// Логирование.
         /// </summary>
-        private readonly ILogger _logger;
+        private readonly ILogger<TransferExcelService> _logger;
         /// <summary>
         /// Загрузчик Excel файлов.
         /// </summary>
@@ -40,14 +40,17 @@ namespace TransferData.BLL.Services
         /// <summary>
         /// Конвертер типов
         /// </summary>
+        /// 
+        
         private readonly IAutoMapper _autoMapper;
-        public TransferExcelService(ILogger<TransferExcelService> logService, IExcelFileLoader excelLoader, IGenericRepository<ExcelModel1> excelRepository, IGenericRepository<ExcelModel2> excel2Repository, IAutoMapper autoMapper)
+        public TransferExcelService(IExcelFileLoader excelLoader, IGenericRepository<ExcelModel1> excelRepository, IGenericRepository<ExcelModel2> excel2Repository, IAutoMapper autoMapper, ILogger<TransferExcelService> logger)
         {
-            _logger = logService;
             _excelLoader = excelLoader;
             _excel1Repository = excelRepository;
             _excel2Repository = excel2Repository;
             _autoMapper = autoMapper;
+            _logger = logger;
+            _logger.LogDebug(1, "NLog injected into HomeController");
         }
         public async Task SaveAsync(IFormFile excelModelForm)
         {
@@ -90,7 +93,7 @@ namespace TransferData.BLL.Services
         public async Task DeleteAsync(Guid Id)
         {
                 ExcelModel1 excelModel1 = await _excel1Repository.FindAsync(x => x.Id == Id);
-               if(excelModel1!=null) await _excel1Repository.DeleteAsyn(excelModel1);
+                if(excelModel1!=null) await _excel1Repository.DeleteAsyn(excelModel1);
 
                 ExcelModel2 excelModel2 = await _excel2Repository.FindAsync(x => x.Id == Id);
                 if(excelModel2 != null) await _excel2Repository.DeleteAsyn(excelModel2);   

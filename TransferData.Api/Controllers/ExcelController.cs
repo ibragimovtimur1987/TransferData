@@ -13,7 +13,7 @@ using TransferData.BLL.Services.Interface;
 
 namespace TransferData.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class ExcelController : ControllerBase
     {
@@ -22,15 +22,15 @@ namespace TransferData.Api.Controllers
         /// </summary>
         private readonly ITransferExcelService _excelConverterService;
 
-        // GET: api/<ExcelController>
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
+        //// GET: api/<ExcelController>
+        //[HttpGet]
+        //public IEnumerable<string> Get()
+        //{
+        //    return new string[] { "value1", "value2" };
+        //}
 
         // GET api/<ExcelController>/5
-        [HttpGet("{createDate}")]
+        [HttpGet]
         public async Task<IEnumerable<ExcelRowDto>> Get(DateTime? createDate)
         {
             if (createDate == null)

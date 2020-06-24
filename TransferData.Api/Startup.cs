@@ -67,7 +67,6 @@ namespace TransferData.Api
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
             });
         }
     }
