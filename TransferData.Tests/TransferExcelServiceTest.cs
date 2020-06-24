@@ -49,14 +49,14 @@ namespace TransferData.Tests
         {
             BLL.Models.ExcelRowDto test1 = new BLL.Models.ExcelRowDto
             {
-                Id = 5,
+               // Id = 5,
                 col1 = "test1",
                 col12 = "test44",
                 sheetId = 1
             };
             BLL.Models.ExcelRowDto test2 = new BLL.Models.ExcelRowDto
             {
-                Id = 2,
+              //  Id = 2,
                 col1 = "test1222",
                 col12 = "test44222",
                 sheetId = 2
@@ -69,7 +69,7 @@ namespace TransferData.Tests
         [Fact]
         public async Task Delete()
         {
-            int i = 3;
+            Guid i = new Guid("b57184a2-bb6c-45a7-99d1-08");
             ITransferExcelService transferExcelService = _serviceProvider.GetService<ITransferExcelService>();
             await transferExcelService.DeleteAsync(i);
 

@@ -19,6 +19,6 @@ namespace TransferData.BLL.Services.Interface
 
        Task UpdateAsync(ExcelRowDto excelRowDto);
 
-       Task DeleteAsync(int rowId);
+        Task DeleteAsync(Guid Id);
     }
 }
