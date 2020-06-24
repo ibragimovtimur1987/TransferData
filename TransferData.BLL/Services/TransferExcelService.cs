@@ -79,8 +79,8 @@ namespace TransferData.BLL.Services
         }
         public async Task<IEnumerable<ExcelRowDto>> GetAsync(DateTime createDateTime)
         {
-                var excelCommonModel1 = await _excel1Repository.FindByAsyn(x => x.CreatedDate != null && x.CreatedDate.Date == createDateTime.Date);
-                var exelModels1 = excelCommonModel1.Select(_autoMapper.Map<ExcelRowDto>);
+               var excelCommonModel1 = await _excel1Repository.FindByAsyn(x => x.CreatedDate != null && x.CreatedDate.Date == createDateTime.Date);
+               var exelModels1 = excelCommonModel1.Select(_autoMapper.Map<ExcelRowDto>);
 
                var excelCommonModel2 = await _excel2Repository.FindByAsyn(x => x.CreatedDate != null && x.CreatedDate.Date == createDateTime.Date);
                var exelModels2 = excelCommonModel2.Select(_autoMapper.Map<ExcelRowDto>);
