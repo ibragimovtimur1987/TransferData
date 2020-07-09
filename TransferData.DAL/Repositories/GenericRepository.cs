@@ -10,7 +10,7 @@ using TransferData.DAL.EF;
 
 namespace TransferData.DAL.Repositories
 {
-    public abstract class GenericRepository<T> : IGenericRepository<T> where T : class
+    public abstract class GenericRepository<T> : IDisposable, IGenericRepository<T> where T : class
     {
         protected TransferDataContext _context;
 
